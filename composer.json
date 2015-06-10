@@ -20,7 +20,7 @@
         "codeclimate/php-test-reporter": "dev-master"
     },
     "require": {
-        "nandodutra/cnab_yaml":"dev-master",
+        "nandodutra/cnab_yaml":"1.2.7",
         "php": ">=5.3.0",
         "mustangostang/spyc": "0.5.*"
     },
