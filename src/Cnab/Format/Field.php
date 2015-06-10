@@ -25,7 +25,7 @@ class Field {
 		$this->pos_start    = $pos_start;
 		$this->pos_end      = $pos_end;
 		$this->length       = ($pos_end + 1) - $pos_start;
-		
+
 		$p_length = Picture::getLength($this->format);
 		if($p_length > $this->length)
 			throw new \Exception("Picture length of '$this->nome' need more positions than  $pos_start : $pos_end");

@@ -252,4 +252,68 @@ class ArquivoTest extends \PHPUnit_Framework_TestCase
             }
         }
     }
+
+    public function testArquivoSicoobCnab204PodeSerCriado()
+    {
+        $codigoBanco = \Cnab\Banco::SICOOB;
+
+        $cnabFactory = new \Cnab\Factory;
+        $arquivo = $cnabFactory->createRemessa($codigoBanco, 'cnab240');
+        $arquivo->configure(array(
+            'data_geracao'  => new \DateTime('2015-02-01 01:02:03'),
+            'data_gravacao' => new \DateTime('2015-02-01'), 
+            'nome_fantasia' => 'BRUNO FERNANDES EVANGELISTA', 
+            'razao_social'  => 'BRUNO FERNANDES EVANGELISTA', 
+            'cnpj'          => '11222333444455',
+            'banco'         => $codigoBanco, //código do banco
+            'logradouro'    => 'Rua Eleozip Cunha',
+            'numero'        => '95',
+            'bairro'        => 'Centro', 
+            'cidade'        => 'Teixeira de Freitas',
+            'uf'            => 'BA',
+            'cep'           => '45985160',
+            'agencia'       => '3231',
+            'agencia_dv'    => '',
+            'codigo_cedente' => '734',
+            'codigo_cedente_dv' => '0',
+            'agencia_mais_cedente_dv' => '',
+            'numero_sequencial_arquivo' => 1,
+        ));
+
+        // você pode adicionar vários boletos em uma remessa
+        $arquivo->insertDetalhe(array(
+            'codigo_ocorrencia' => 1, // 1 = Entrada de título, futuramente poderemos ter uma constante
+            'nosso_numero'      => '12',
+            'numero_documento'  => '123456',
+            'carteira'          => '1',
+            'especie'           => \Cnab\Especie::CNAB240_OUTROS, // Você pode consultar as especies Cnab\Especie::CEF_OUTROS, futuramente poderemos ter uma tabela na documentação
+            'aceite'            => 'N', // "S" ou "N"
+            'registrado'        => true,
+            'modalidade_carteira' => '01',
+            'valor'             => 1.00, // Valor do boleto
+            'instrucao1'        => '', // 1 = Protestar com (Prazo) dias, 2 = Devolver após (Prazo) dias, futuramente poderemos ter uma constante
+            'instrucao2'        => '', // preenchido com zeros
+            'sacado_razao_social' => 'FERNANDO DUTRA NERES', // O Sacado é o cliente, preste atenção nos campos abaixo
+            'sacado_tipo'       => 'cpf', //campo fixo, escreva 'cpf' (sim as letras cpf) se for pessoa fisica, cnpj se for pessoa juridica
+            'sacado_cnpj'        => '047.883.735-64',
+            'sacado_logradouro' => 'RUA EURICO GASPAR DUTRA, 273',
+            'sacado_bairro'     => 'CENTRO',
+            'sacado_cep'        => '45985106',
+            'sacado_cidade'     => 'TEIXEIRA DE FREITAS',
+            'sacado_uf'         => 'BA',
+            'data_vencimento'   => new \DateTime('1969-08-05'),
+            'data_cadastro'     => new \DateTime('2015-01-14'),
+            'juros_de_um_dia'     => 0.0, // Valor do juros de 1 dia'
+            'data_desconto'       => new \DateTime('2015-02-09'),
+            'valor_desconto'      => 0.0, // Valor do desconto
+            'prazo'               => 0, // prazo de dias para o cliente pagar após o vencimento
+            'taxa_de_permanencia' => '0', //00 = Acata Comissão por Dia (recomendável), 51 Acata Condições de Cadastramento na CAIXA
+            'mensagem'            => 'Descrição do boleto',
+            'data_multa'          => new \DateTime('2015-02-07'), // data da multa
+            'valor_multa'         => 0, // valor da multa
+        ));
+
+        $texto = $arquivo->getText();
+        file_put_contents('./teste.txt', $texto);
+    }
 }

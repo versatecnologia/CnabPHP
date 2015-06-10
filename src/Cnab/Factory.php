@@ -66,7 +66,7 @@ class Factory
 
         if(!$format['banco'])
             throw new \Exception('Banco não suportado');
-
+        
         if(!\Cnab\Banco::existBanco($format['banco']))
             throw new \Exception('Banco não suportado');
 

@@ -7,6 +7,7 @@ class Banco
     const CEF       = 104;
     const BRADESCO  = 237;
     const ITAU      = 341;
+    const SICOOB    = 756;
 
     public static function getBanco($codigo)
     {
@@ -42,6 +43,12 @@ class Banco
             return array(
                 'codigo_do_banco' => self::BRADESCO,
                 'nome_do_banco'   => 'BRADESCO'
+            );
+        }
+        else if($codigo == self::SICOOB) {
+            return array(
+                'codigo_do_banco' => self::SICOOB,
+                'nome_do_banco' => 'BANCO COOPERATIVO DO BRASIL S/A'
             );
         }
         else

@@ -95,6 +95,7 @@ class Linha {
 			if($field->getValue() === null || $field->getValue() === false)
 			{
 				$this->last_error = "$fieldNome dont be null or false"; 
+				echo $this->last_error;
 				return false;
 			}
 		return true;

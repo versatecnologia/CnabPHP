@@ -41,6 +41,16 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $campos[] = 'numero_sequencial_arquivo';
         }
 
+        if($this->codigo_banco == \Cnab\Banco::SICOOB)
+        {
+            $campos[] = 'agencia';
+            $campos[] = 'agencia_dv';
+            $campos[] = 'codigo_cedente';
+            $campos[] = 'codigo_cedente_dv';
+            $campos[] = 'agencia_mais_cedente_dv';
+            $campos[] = 'numero_sequencial_arquivo';
+        }
+
         foreach($campos as $campo)
         {
             if(array_key_exists($campo, $params))
@@ -73,6 +83,12 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $this->headerArquivo->agencia = $this->configuracao['agencia'];
         $this->headerArquivo->agencia_dv = $this->configuracao['agencia_dv'];
         $this->headerArquivo->codigo_cedente = $this->configuracao['codigo_cedente'];
+        
+        if($this->codigo_banco == \Cnab\Banco::SICOOB) {
+            $this->headerArquivo->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
+            $this->headerArquivo->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+        }
+
         $this->headerArquivo->nome_empresa = $this->configuracao['nome_fantasia'];
         $this->headerArquivo->nome_banco = $banco['nome_do_banco'];
         $this->headerArquivo->codigo_remessa_retorno = 1;
@@ -89,10 +105,16 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $this->headerLote->agencia_dv = $this->headerArquivo->agencia_dv;
         $this->headerLote->codigo_convenio = $this->headerArquivo->codigo_cedente;
         $this->headerLote->codigo_cedente = $this->headerArquivo->codigo_cedente;
+        
+        if($this->codigo_banco == \Cnab\Banco::SICOOB) {
+            $this->headerLote->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
+            $this->headerLote->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+        }
+
         $this->headerLote->nome_empresa = $this->headerArquivo->nome_empresa;
         $this->headerLote->numero_sequencial_arquivo = $this->headerArquivo->numero_sequencial_arquivo;
         $this->headerLote->data_geracao = $this->headerArquivo->data_geracao;
-        if($this->codigo_banco = \Cnab\Banco::CEF)
+        if($this->codigo_banco == \Cnab\Banco::CEF)
             $this->headerLote->tipo_servico = 2;
 
         $this->trailerLote->codigo_banco = $this->headerArquivo->codigo_banco;
@@ -114,13 +136,19 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $detalhe->segmento_p->agencia = $this->headerArquivo->agencia;
         $detalhe->segmento_p->agencia_dv = $this->headerArquivo->agencia_dv;
         $detalhe->segmento_p->codigo_cedente = $this->headerArquivo->codigo_cedente;
+        
+        if($this->codigo_banco == \Cnab\Banco::SICOOB) {
+            $detalhe->segmento_p->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
+            $detalhe->segmento_p->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+        }
+
         $detalhe->segmento_p->nosso_numero = $boleto['nosso_numero'];
         $detalhe->segmento_p->codigo_carteira = 1; // 1 = Cobrança Simples
-        if ($this->layoutVersao === 'sigcb' && $this->codigo_banco = \Cnab\Banco::CEF) {
+        if ($this->layoutVersao === 'sigcb' && $this->codigo_banco == \Cnab\Banco::CEF) {
             $detalhe->segmento_p->modalidade_carteira = $boleto['modalidade_carteira']; // 21 = (título Sem Registro emissão CAIXA)
         }
         $detalhe->segmento_p->forma_cadastramento = $boleto['registrado'] ? 1 : 2; // 1 = Com, 2 = Sem Registro
-        if($boleto['registrado'] && $this->codigo_banco = \Cnab\Banco::CEF)
+        if($boleto['registrado'] && $this->codigo_banco == \Cnab\Banco::CEF)
             $this->headerLote->tipo_servico = 1;
         $detalhe->segmento_p->numero_documento = $boleto['numero_documento'];
         $detalhe->segmento_p->vencimento = $dateVencimento;
@@ -154,7 +182,6 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         } else {
             throw new \Exception('Tipo de detalhe inválido: '.$tipo);
         }
-
 
         // SEGMENTO Q -------------------------------
         $detalhe->segmento_q->codigo_banco = $this->headerArquivo->codigo_banco;

@@ -5,6 +5,32 @@ use Cnab\Retorno\Cnab240\Arquivo;
 
 class ArquivoTest extends \PHPUnit_Framework_TestCase 
 {
+    public function testArquivoSicoobPodeSerLido()
+    {
+        $factory = new \Cnab\Factory;
+        $arquivo = $factory->createRetorno('tests/fixtures/cnab240/retorno_sicoob_cnab240.ret');
+
+        $this->assertNotNull($arquivo);
+        $this->assertNotNull($arquivo->header);
+        $this->assertNotNull($arquivo->lotes);
+        $this->assertNotNull($arquivo->trailer);
+
+        //$this->assertEquals(7340, $arquivo->getConta());
+        $this->assertEquals(756, $arquivo->getCodigoBanco());
+
+        $detalhe = $arquivo->listDetalhes();
+        $detalhe = $detalhe[0];
+
+        $this->assertEquals(1.00, $detalhe->getValorRecebido());
+        $this->assertEquals(1.00, $detalhe->getValorTitulo());
+        $this->assertEquals(3231, $detalhe->getAgenciaCobradora());
+
+        $this->assertEquals(null, $detalhe->getNumeroDocumento());
+        $this->assertEquals(null, $detalhe->getCarteira());
+        $this->assertEquals('0', $detalhe->getAgencia());
+        $this->assertEquals(11136997, $detalhe->getNossoNumero());
+    }
+
     public function testArquivoSantanderPodeSerLido()
     {
         $factory = new \Cnab\Factory;

@@ -35,6 +35,7 @@ class Picture
 	public static function encode($value, $format, $options)
 	{
 		$m = array();
+		
 		if(\preg_match(self::REGEX_VALID_FORMAT, $format, $m))
 		{
 			if($m['tipo1'] == 'X' && !$m['tipo2'])
