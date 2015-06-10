@@ -29,8 +29,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
     {
         $banco = \Cnab\Banco::getBanco($this->codigo_banco);
         $campos = array(
-            'data_geracao', 'data_gravacao', 'nome_fantasia', 'razao_social', 'cnpj', 'logradouro', 'numero', 'bairro', 
-            'cidade', 'uf', 'cep',
+            'data_geracao', 'data_gravacao', 'nome_fantasia', 'razao_social', 'tipo_inscricao', 'cpf_cnpj', 'logradouro', 'numero', 'bairro', 'cidade', 'uf', 'cep',
         );
 
         if($this->codigo_banco == \Cnab\Banco::CEF)
@@ -107,6 +106,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $this->headerLote->codigo_cedente = $this->headerArquivo->codigo_cedente;
         
         if($this->codigo_banco == \Cnab\Banco::SICOOB) {
+            $this->headerLote->codigo_convenio = '';
             $this->headerLote->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
             $this->headerLote->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
         }
