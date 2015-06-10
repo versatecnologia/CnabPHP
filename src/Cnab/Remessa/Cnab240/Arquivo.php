@@ -91,7 +91,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $this->headerArquivo->nome_empresa = $this->configuracao['nome_fantasia'];
         $this->headerArquivo->nome_banco = $banco['nome_do_banco'];
         $this->headerArquivo->codigo_remessa_retorno = 1;
-        $this->headerArquivo->data_geracao = $this->configuracao['data_geracao'];
+        $this->headerArquivo->data_geracao = $this->configuracao['data_geracao']->format('');
         $this->headerArquivo->hora_geracao = $this->configuracao['data_geracao'];
         $this->headerArquivo->numero_sequencial_arquivo = $this->configuracao['numero_sequencial_arquivo'];
 
@@ -143,6 +143,11 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         $detalhe->segmento_p->nosso_numero = $boleto['nosso_numero'];
+
+        if($this->codigo_banco == \Cnab\Banco::SICOOB) {
+            $detalhe->segmento_p->nosso_numero = str_pad($boleto['nosso_numero'], 10, '0', STR_PAD_LEFT) . '' . str_pad($boleto['parcela'], 2, '0', STR_PAD_LEFT) . '013     ';
+        }
+
         $detalhe->segmento_p->codigo_carteira = 1; // 1 = Cobrança Simples
         if ($this->layoutVersao === 'sigcb' && $this->codigo_banco == \Cnab\Banco::CEF) {
             $detalhe->segmento_p->modalidade_carteira = $boleto['modalidade_carteira']; // 21 = (título Sem Registro emissão CAIXA)
