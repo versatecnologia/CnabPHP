@@ -91,7 +91,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $this->headerArquivo->nome_empresa = $this->configuracao['nome_fantasia'];
         $this->headerArquivo->nome_banco = $banco['nome_do_banco'];
         $this->headerArquivo->codigo_remessa_retorno = 1;
-        $this->headerArquivo->data_geracao = $this->configuracao['data_geracao']->format('');
+        $this->headerArquivo->data_geracao = $this->configuracao['data_geracao'];
         $this->headerArquivo->hora_geracao = $this->configuracao['data_geracao'];
         $this->headerArquivo->numero_sequencial_arquivo = $this->configuracao['numero_sequencial_arquivo'];
 
@@ -152,7 +152,13 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         if ($this->layoutVersao === 'sigcb' && $this->codigo_banco == \Cnab\Banco::CEF) {
             $detalhe->segmento_p->modalidade_carteira = $boleto['modalidade_carteira']; // 21 = (título Sem Registro emissão CAIXA)
         }
+
         $detalhe->segmento_p->forma_cadastramento = $boleto['registrado'] ? 1 : 2; // 1 = Com, 2 = Sem Registro
+
+        if($this->codigo_banco == \Cnab\Banco::SICOOB) {
+            $detalhe->segmento_p->forma_cadastramento = 0;
+        }
+
         if($boleto['registrado'] && $this->codigo_banco == \Cnab\Banco::CEF)
             $this->headerLote->tipo_servico = 1;
         $detalhe->segmento_p->numero_documento = $boleto['numero_documento'];
