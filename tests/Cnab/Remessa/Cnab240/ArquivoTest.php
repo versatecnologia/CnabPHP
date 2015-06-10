@@ -13,8 +13,9 @@ class ArquivoTest extends \PHPUnit_Framework_TestCase
             'data_geracao'  => new \DateTime('2015-02-01 01:02:03'),
             'data_gravacao' => new \DateTime('2015-02-01'), 
             'nome_fantasia' => 'Nome Fantasia da sua empresa', 
-            'razao_social'  => 'Razão social da sua empresa', 
-            'cnpj'          => '11222333444455',
+            'razao_social'  => 'Razão social da sua empresa',
+            'tipo_inscricao' => 2, //1 = cpf, 2 = cnpj
+            'cpf_cnpj'          => '11222333444455',
             'banco'         => $codigoBanco, //código do banco
             'logradouro'    => 'Logradouro da Sua empresa',
             'numero'        => 'Número do endereço',
@@ -264,9 +265,10 @@ class ArquivoTest extends \PHPUnit_Framework_TestCase
             'data_gravacao' => new \DateTime('2015-02-01'), 
             'nome_fantasia' => 'BRUNO FERNANDES EVANGELISTA', 
             'razao_social'  => 'BRUNO FERNANDES EVANGELISTA', 
-            'cnpj'          => '11222333444455',
+            'tipo_inscricao' => 2, //1 = cpf, 2 = cnpj
+            'cpf_cnpj'          => '11222333444455',
             'banco'         => $codigoBanco, //código do banco
-            'logradouro'    => 'Rua Eleozip Cunha',
+            'logradouro'    => 'Rua Eleozipo Cunha',
             'numero'        => '95',
             'bairro'        => 'Centro', 
             'cidade'        => 'Teixeira de Freitas',

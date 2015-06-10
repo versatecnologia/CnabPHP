@@ -78,8 +78,8 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $this->trailerArquivo = new TrailerArquivo($this);
 
         $this->headerArquivo->codigo_banco = $this->banco['codigo_do_banco'];
-        $this->headerArquivo->codigo_inscricao = 2;
-        $this->headerArquivo->numero_inscricao = $this->prepareText($this->configuracao['cnpj'], '.-/');
+        $this->headerArquivo->codigo_inscricao = $this->configuracao['tipo_inscricao'];
+        $this->headerArquivo->numero_inscricao = $this->prepareText($this->configuracao['cpf_cnpj'], '.-/');
         $this->headerArquivo->agencia = $this->configuracao['agencia'];
         $this->headerArquivo->agencia_dv = $this->configuracao['agencia_dv'];
         $this->headerArquivo->codigo_cedente = $this->configuracao['codigo_cedente'];
