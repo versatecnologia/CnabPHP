@@ -67,7 +67,7 @@ class Linha {
 			foreach($fields as $field)
 			{
                 if($lastField && $field->pos_start != $lastField->pos_end + 1)
-                    throw new \Exception("gap between {$lastField->nome} and {$field->nome}");
+                    throw new \Exception("gap between {$lastField->nome} [$lastField->pos_start, $lastField->pos_end] and {$field->nome} [$field->pos_start, $field->pos_end]");
 				$dados .= $field->getEncoded();
 				if($field->pos_end > $max_pos_end)
 					$max_pos_end = $field->pos_end; 
