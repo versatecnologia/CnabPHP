@@ -209,7 +209,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
         $detalhe->segmento_q->logradouro = $this->prepareText($boleto['sacado_logradouro']);
         $detalhe->segmento_q->bairro = $this->prepareText($boleto['sacado_bairro']);
-        $detalhe->segmento_q->cep = str_replace('-', '', $boleto['sacado_cep']);
+        $detalhe->segmento_q->cep = str_replace(['-', '.'], '', $boleto['sacado_cep']);
         $detalhe->segmento_q->cidade = $this->prepareText($boleto['sacado_cidade']);
         $detalhe->segmento_q->estado = $boleto['sacado_uf'];
         // se o titulo for de terceiro, o sacador é o terceiro
