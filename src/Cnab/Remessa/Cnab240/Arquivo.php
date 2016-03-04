@@ -160,16 +160,17 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         if($boleto['registrado'] && $this->codigo_banco == \Cnab\Banco::CEF)
-            $this->headerLote->tipo_servico = 1;
+        $this->headerLote->tipo_servico = 1;
         $detalhe->segmento_p->numero_documento = $boleto['numero_documento'];
         $detalhe->segmento_p->vencimento = $dateVencimento;
         $detalhe->segmento_p->valor_titulo = $boleto['valor'];
         $detalhe->segmento_p->especie = $boleto['especie']; // 4 = Duplicata serviço
         $detalhe->segmento_p->aceite = $boleto['aceite'];
         $detalhe->segmento_p->data_emissao = $dateCadastro;
-        $detalhe->segmento_p->codigo_juros_mora = 1; // 1 = Por dia
+        $detalhe->segmento_p->codigo_juros_mora = $boleto['codigo_juros_mora']; // 1 = Por dia
         $detalhe->segmento_p->data_juros_mora = $dateVencimento;
         $detalhe->segmento_p->valor_juros_mora = $boleto['juros_de_um_dia'];
+        
         if($boleto['valor_desconto'] > 0) {
             $detalhe->segmento_p->codigo_desconto_1 = 1; // valor fixo
             $detalhe->segmento_p->data_desconto_1 = $boleto['data_desconto'];
@@ -307,6 +308,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
         foreach($this->detalhes as $detalhe)
         {
+
             $qtde_titulo_cobranca_simples++;
             $valor_total_titulo_simples += $detalhe->segmento_p->valor_titulo;
             foreach($detalhe->listSegmento() as $segmento) {
@@ -322,8 +324,14 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         $this->trailerLote->qtde_registro_lote = $qtde_registro_lote;
-        $this->trailerLote->qtde_titulo_cobranca_simples = $qtde_titulo_cobranca_simples;
-        $this->trailerLote->valor_total_titulo_simples = $valor_total_titulo_simples;
+        
+        // $this->trailerLote->qtde_titulo_cobranca_simples = $qtde_titulo_cobranca_simples;
+        // $this->trailerLote->valor_total_titulo_simples = $valor_total_titulo_simples;
+        $this->trailerLote->qtde_titulo_cobranca_simples = 0;
+        $this->trailerLote->valor_total_titulo_simples = 0;
+        $this->trailerLote->qtde_titulo_cobranca_vinculada = $qtde_titulo_cobranca_simples;
+        $this->trailerLote->valor_total_titulo_vinculada = $valor_total_titulo_simples;
+        
         $this->trailerLote->qtde_titulo_cobranca_caucionada = 0;
         $this->trailerLote->valor_total_titulo_caucionada = 0;
         $this->trailerLote->qtde_titulo_cobranca_descontada = 0;
@@ -331,6 +339,8 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
         $this->trailerArquivo->qtde_lotes = 1;
         $this->trailerArquivo->qtde_registros = $this->trailerLote->qtde_registro_lote + 2;
+        
+        $this->trailerArquivo->qtde_contas_conciliacao = 1;
 
         if(!$this->trailerLote->validate())
             throw new \InvalidArgumentException($this->trailerLote->last_error);
