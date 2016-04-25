@@ -9,6 +9,14 @@ class HeaderArquivo extends \Cnab\Format\Linha
         $yamlLoad->load($this, 'cnab240', 'header_arquivo');
 	}
 
+    public function getAgencia()
+    {
+        if ($this->existField('agencia'))
+            return $this->agencia;
+        else
+            return null;
+    }
+
 	public function getConta()
     {
         if($this->existField('conta'))
