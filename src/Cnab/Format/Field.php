@@ -36,7 +36,7 @@ class Field {
 	public function set($valor)
 	{
 		if($valor === false || is_null($valor))
-			throw new \Exception("'$this->nome' dont be false or null");
+			throw new \Exception("'$this->nome' dont be false or null ($this->pos_start, $this->pos_end)");
 			
 		$this->valor_decoded = $valor;
 		
