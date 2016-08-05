@@ -32,11 +32,14 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             'data_geracao', 'data_gravacao', 'nome_fantasia', 'razao_social', 'tipo_inscricao', 'cpf_cnpj', 'logradouro', 'numero', 'bairro', 'cidade', 'uf', 'cep',
         );
 
-        if($this->codigo_banco == \Cnab\Banco::CEF)
+        if($this->codigo_banco == \Cnab\Banco::CEF || $this->codigo_banco == \Cnab\Banco::BRADESCO)
         {
             $campos[] = 'agencia';
             $campos[] = 'agencia_dv';
             $campos[] = 'codigo_cedente';
+            $campos[] = 'codigo_cedente_dv';
+            $campos[] = 'agencia_mais_cedente_dv';
+            $campos[] = 'codigo_convenio';
             $campos[] = 'numero_sequencial_arquivo';
         }
 
@@ -82,10 +85,15 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $this->headerArquivo->agencia = $this->configuracao['agencia'];
         $this->headerArquivo->agencia_dv = $this->configuracao['agencia_dv'];
         $this->headerArquivo->codigo_cedente = $this->configuracao['codigo_cedente'];
-        
+
         if($this->codigo_banco == \Cnab\Banco::SICOOB) {
             $this->headerArquivo->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
             $this->headerArquivo->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+        }
+        //dd($this->configuracao);
+        if($this->codigo_banco == \Cnab\Banco::BRADESCO) {
+            $this->headerArquivo->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
+            $this->headerArquivo->codigo_convenio = $this->configuracao['codigo_convenio'];
         }
 
         $this->headerArquivo->nome_empresa = $this->configuracao['nome_fantasia'];
@@ -109,6 +117,12 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $this->headerLote->codigo_convenio = '';
             $this->headerLote->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
             $this->headerLote->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+        }
+
+
+        if($this->codigo_banco == \Cnab\Banco::BRADESCO) {
+            $this->headerLote->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
+            $this->headerLote->agencia_mais_cedente_dv = '';
         }
 
         $this->headerLote->nome_empresa = $this->headerArquivo->nome_empresa;
@@ -137,7 +151,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $detalhe->segmento_p->agencia_dv = $this->headerArquivo->agencia_dv;
         $detalhe->segmento_p->codigo_cedente = $this->headerArquivo->codigo_cedente;
         
-        if($this->codigo_banco == \Cnab\Banco::SICOOB) {
+        if($this->codigo_banco == \Cnab\Banco::SICOOB || $this->codigo_banco == \Cnab\Banco::BRADESCO) {
             $detalhe->segmento_p->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
             $detalhe->segmento_p->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
         }
@@ -200,7 +214,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $detalhe->segmento_q->codigo_banco = $this->headerArquivo->codigo_banco;
         $detalhe->segmento_q->lote_servico = $this->headerLote->lote_servico;
         $detalhe->segmento_q->codigo_ocorrencia = $detalhe->segmento_p->codigo_ocorrencia;
-        if(@$boleto['sacado_cnpj']) {
+        if(isset($boleto['sacado_cnpj'])) {
             $detalhe->segmento_q->sacado_codigo_inscricao = '2';
             $detalhe->segmento_q->sacado_numero_inscricao = $this->prepareText($boleto['sacado_cnpj'], '.-/');
             $detalhe->segmento_q->nome = $this->prepareText($boleto['sacado_razao_social']);
@@ -300,7 +314,6 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         // valida os dados
         if(!$this->headerArquivo->validate())
             throw new \InvalidArgumentException($this->headerArquivo->last_error);
-
         if(!$this->headerLote->validate())
             throw new \InvalidArgumentException($this->headerArquivo->last_error);
 
@@ -323,7 +336,6 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
             $dados .= $detalhe->getEncoded() . self::QUEBRA_LINHA;
         }
-
         $this->trailerLote->qtde_registro_lote = $qtde_registro_lote;
         
         // $this->trailerLote->qtde_titulo_cobranca_simples = $qtde_titulo_cobranca_simples;
