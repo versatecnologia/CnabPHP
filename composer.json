@@ -1,5 +1,5 @@
 {
-    "name": "nandodutra/cnab_php",
+    "name": "mtferreira/cnab_php",
     "type": "library",
     "description": "Projeto para criar arquivos de remessas e processar arquivos de retorno no formato CNAB",
     "keywords": ["boleto", "remessa", "retorno"],
@@ -12,6 +12,10 @@
         {
             "name": "Fernando Dutra Neres",
             "email": "fernando@inova2b.com.br"
+        },
+        {
+            "name": "Matheus Ferreira Silva",
+            "email": "santana.matheusferreira@gmail.com"
         }
     ],
     "require-dev": {
