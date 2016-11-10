@@ -86,12 +86,6 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             else
                 throw new \Exception('Configuração "'.$campo.'" need to be set');
         }
-            
-        foreach($campos as $key)
-        {
-            if(!array_key_exists($key, $params))
-                throw new Exception('Configuração "'.$key.'" dont exists');
-        }
 
         $this->data_geracao  = $this->configuracao['data_geracao'];
         $this->data_gravacao = $this->configuracao['data_gravacao'];
