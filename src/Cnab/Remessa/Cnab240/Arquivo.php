@@ -223,10 +223,11 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $detalhe->segmento_q->codigo_banco = $this->headerArquivo->codigo_banco;
         $detalhe->segmento_q->lote_servico = $this->headerLote->lote_servico;
         $detalhe->segmento_q->codigo_ocorrencia = $detalhe->segmento_p->codigo_ocorrencia;
+        
         if(isset($boleto['sacado_cnpj'])) {
             $detalhe->segmento_q->sacado_codigo_inscricao = '2';
             $detalhe->segmento_q->sacado_numero_inscricao = $this->prepareText($boleto['sacado_cnpj'], '.-/');
-            $detalhe->segmento_q->nome = $this->prepareText($boleto['sacado_razao_social']);
+            $detalhe->segmento_q->nome = $this->prepareText($boleto['sacado_nome']);
         } else {
             $detalhe->segmento_q->sacado_codigo_inscricao = '1';
             $detalhe->segmento_q->sacado_numero_inscricao = $this->prepareText($boleto['sacado_cpf'], '.-/');
