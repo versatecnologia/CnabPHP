@@ -215,7 +215,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $detalhe->segmento_p->codigo_protesto = 3; // 3 = Não protestar
         $detalhe->segmento_p->prazo_protesto = 0;
         $detalhe->segmento_p->codigo_baixa = 1; // Baixar
-        $detalhe->segmento_p->prazo_baixa = 30; // Baixar automaticamente após 30 dias
+        $detalhe->segmento_p->prazo_baixa = $boleto['prazo']; // Baixar automaticamente após 30 dias
 
         $detalhe->segmento_p->codigo_ocorrencia = $boleto['codigo_ocorrencia'];
 
