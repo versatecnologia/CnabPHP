@@ -307,23 +307,23 @@ class Detalhe extends \Cnab\Format\Linha implements \Cnab\Retorno\IDetalhe
         }
         else if(\Cnab\Banco::CEF == $this->_codigo_banco)
 		{
-			if(01 == $codigo)
+			if(1 == $codigo)
 			    return 'Entrada Confirmada';
-			else if(02 == $codigo)
+			else if(2 == $codigo)
 			    return 'Baixa Confirmada';
-			else if(03 == $codigo)
+			else if(3 == $codigo)
 			    return 'Abatimento Concedido';
-			else if(04 == $codigo)
+			else if(4 == $codigo)
 			    return 'Abatimento Cancelado';
-			else if(05 == $codigo)
+			else if(5 == $codigo)
 			    return 'Vencimento Alterado';
-			else if(06 == $codigo)
+			else if(6 == $codigo)
 			    return 'Uso da Empresa Alterado';
-			else if(07 == $codigo)
+			else if(7 == $codigo)
 			    return 'Prazo de Protesto Alterado';
-			else if(08 == $codigo)
+			else if(8 == $codigo)
 			    return 'Prazo de Devolução Alterado';
-			else if(09 == $codigo)
+			else if(9 == $codigo)
 			    return 'Alteração Confirmada';
 			else if(10 == $codigo)
 			    return 'Alteração com Reemissão de Bloqueto Confirmada';
