@@ -112,6 +112,12 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $this->headerArquivo->codigo_convenio   = $this->configuracao['codigo_convenio'];
         }
 
+        if($this->codigo_banco == \Cnab\Banco::CEF) {
+            $this->headerArquivo->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
+            $this->headerArquivo->codigo_convenio   = $this->configuracao['codigo_convenio'];
+            $this->headerArquivo->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+        }
+
         $this->headerArquivo->nome_empresa              = $this->configuracao['nome_fantasia'];
         $this->headerArquivo->nome_banco                = $banco['nome_do_banco'];
         $this->headerArquivo->codigo_remessa_retorno    = 1;
@@ -126,7 +132,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $this->headerLote->numero_inscricao = $this->headerArquivo->numero_inscricao;
         $this->headerLote->agencia          = $this->headerArquivo->agencia;
         $this->headerLote->agencia_dv       = $this->headerArquivo->agencia_dv;
-        $this->headerLote->codigo_convenio  = $this->headerArquivo->codigo_cedente;
+        $this->headerLote->codigo_convenio  = $this->headerArquivo->codigo_convenio;
         $this->headerLote->codigo_cedente   = $this->headerArquivo->codigo_cedente;
         
         if($this->codigo_banco == \Cnab\Banco::SICOOB) {
@@ -143,8 +149,12 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $this->headerLote->nome_empresa              = $this->headerArquivo->nome_empresa;
         $this->headerLote->numero_sequencial_arquivo = $this->headerArquivo->numero_sequencial_arquivo;
         $this->headerLote->data_geracao              = $this->headerArquivo->data_geracao;
-        if($this->codigo_banco == \Cnab\Banco::CEF)
+
+        if ($this->codigo_banco == \Cnab\Banco::CEF) {
             $this->headerLote->tipo_servico = 2;
+            $this->headerLote->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
+            $this->headerLote->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+        }
 
         $this->trailerLote->codigo_banco = $this->headerArquivo->codigo_banco;
         $this->trailerLote->lote_servico = $this->headerLote->lote_servico;
@@ -167,6 +177,11 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $detalhe->segmento_p->codigo_cedente = $this->headerArquivo->codigo_cedente;
         
         if ($this->codigo_banco == \Cnab\Banco::SICOOB || $this->codigo_banco == \Cnab\Banco::BRADESCO) {
+            $detalhe->segmento_p->codigo_cedente_dv       = $this->configuracao['codigo_cedente_dv'];
+            $detalhe->segmento_p->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+        }
+
+        if ($this->codigo_banco == \Cnab\Banco::CEF) {
             $detalhe->segmento_p->codigo_cedente_dv       = $this->configuracao['codigo_cedente_dv'];
             $detalhe->segmento_p->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
         }
@@ -339,7 +354,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         if(!$this->headerArquivo->validate())
             throw new \InvalidArgumentException($this->headerArquivo->last_error);
         if(!$this->headerLote->validate())
-            throw new \InvalidArgumentException($this->headerArquivo->last_error);
+            throw new \InvalidArgumentException($this->headerLote->last_error);
 
         $dados = $this->headerArquivo->getEncoded() . self::QUEBRA_LINHA;
         $dados .= $this->headerLote->getEncoded() . self::QUEBRA_LINHA;
@@ -366,9 +381,11 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         // $this->trailerLote->valor_total_titulo_simples = $valor_total_titulo_simples;
         $this->trailerLote->qtde_titulo_cobranca_simples = 0;
         $this->trailerLote->valor_total_titulo_simples   = 0;
-        
-        $this->trailerLote->qtde_titulo_cobranca_vinculada = $qtde_titulo_cobranca_simples;
-        $this->trailerLote->valor_total_titulo_vinculada   = $valor_total_titulo_simples;
+
+        if ($this->codigo_banco != \Cnab\Banco::CEF) {
+            $this->trailerLote->qtde_titulo_cobranca_vinculada = $qtde_titulo_cobranca_simples;
+            $this->trailerLote->valor_total_titulo_vinculada   = $valor_total_titulo_simples;
+        }
         
         $this->trailerLote->qtde_titulo_cobranca_caucionada = 0;
         $this->trailerLote->valor_total_titulo_caucionada   = 0;
