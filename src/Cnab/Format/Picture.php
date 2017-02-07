@@ -35,7 +35,7 @@ class Picture
 	public static function encode($value, $format, $options)
 	{
 		$m = array();
-		
+
 		if(\preg_match(self::REGEX_VALID_FORMAT, $format, $m))
 		{
 			if($m['tipo1'] == 'X' && !$m['tipo2'])
@@ -59,7 +59,7 @@ class Picture
 				}
 				
 				if(!is_numeric($value))
-					throw new \Exception("value '$value' dont is a number, need format $format");
+					throw new \Exception("value '$value' dont is a number, need format $format (" . $options['pos'][0] . "-" . $options['pos'][1] .  ")");
 					
 				$value = (string)(round($value, 2));
 				$exp   = explode('.', $value);
