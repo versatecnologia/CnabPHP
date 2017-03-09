@@ -159,7 +159,7 @@ class Detalhe extends \Cnab\Format\Linha implements \Cnab\Retorno\IDetalhe
 	public function getNossoNumero()
 	{
         $nossoNumero = $this->segmento_t->nosso_numero;
-        dd($this->segmento_t->nosso_numero);
+        //dd($this->segmento_t->nosso_numero);
         if ($this->codigo_banco == 1) {
             $nossoNumero = preg_replace(
                 '/^'.strval($this->arquivo->getCodigoConvenio()).'/',
