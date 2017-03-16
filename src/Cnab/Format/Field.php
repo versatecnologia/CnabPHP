@@ -39,7 +39,7 @@ class Field {
 			throw new \Exception("'$this->nome' dont be false or null ($this->pos_start, $this->pos_end)");
 			
 		$this->valor_decoded = $valor;
-		
+
 		try 
 		{
 			$this->valor_encoded = Picture::encode($valor, $this->format, $this->options);	
