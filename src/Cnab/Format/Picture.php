@@ -60,9 +60,16 @@ class Picture
 				
 				if(!is_numeric($value))
 					throw new \Exception("value '$value' dont is a number, need format $format (" . $options['pos'][0] . "-" . $options['pos'][1] .  ")");
-					
-				$value = (string)(round($value, 2));
+
+				$decimals=0;
+
+				if(round($value)!=$value){
+					$decimals=2;
+				}
+
+				$value = (string)number_format($value, $decimals,'.','');
 				$exp   = explode('.', $value);
+
 				if(!isset($exp[1]))
 					$exp[1] = 0;
 				if($m['tipo2']=='V9')
