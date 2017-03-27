@@ -22,13 +22,13 @@ Projeto para criar arquivos de remessas e processar arquivos de retorno no forma
 | Caixa           | 240                | 240 e 400          |
 | Itaú            | 400 (Falta testar) | 400                |
 | Santander       |                    | 240                |
-| Sicoob          | 240                |                    |
+| Sicoob          | 240                | 240 e 400          |
 
 ## Instalação
 ### Composer
 Se você já conhece o **Composer**, adicione a dependência abaixo à diretiva *"require"* no seu **composer.json**:
 ```
-"andersondanilo/cnab_php": "1.3.*"
+"mtferreira/cnab_php": "dev-master"
 ```
 
 ## Como Usar
