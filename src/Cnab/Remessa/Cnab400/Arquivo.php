@@ -344,7 +344,5 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 	{        
 		$text = $this->getText();
 		file_put_contents($filename, $text);
-
-        return $filename;
 	}
 }
