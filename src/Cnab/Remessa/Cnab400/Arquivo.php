@@ -53,7 +53,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $campos[] = 'conta_dac';
             $campos[] = 'conta_dv';
             $campos[] = 'agencia_mais_cedente_dv';
-            $campos[] = 'numero_sequencial_arquivo';
+            $campos[] = 'sequencial_remessa';
         } else {
             $campos[] = 'agencia';
             $campos[] = 'conta';
@@ -87,6 +87,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
         if ($this->codigo_banco == \Cnab\Banco::CEF || $this->codigo_banco == \Cnab\Banco::BRADESCO) {
             $this->header->codigo_cedente = $this->configuracao['codigo_cedente'];
+            $this->header->sequencial_remessa = $this->configuracao['sequencial_remessa'];
         } else {
             $this->header->agencia  = $this->configuracao['agencia'];
             $this->header->conta    = $this->configuracao['conta'];
