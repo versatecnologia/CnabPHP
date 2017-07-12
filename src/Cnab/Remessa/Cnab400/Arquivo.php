@@ -54,6 +54,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $campos[] = 'conta_dv';
             $campos[] = 'agencia_mais_cedente_dv';
             $campos[] = 'sequencial_remessa';
+            $campos[] = 'tipo_registro';
         } else {
             $campos[] = 'agencia';
             $campos[] = 'conta';
@@ -87,6 +88,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
         if ($this->codigo_banco == \Cnab\Banco::CEF || $this->codigo_banco == \Cnab\Banco::BRADESCO) {
             $this->header->codigo_cedente = $this->configuracao['codigo_cedente'];
+            $this->header->tipo_registro = $this->configuracao['tipo_registro'];
             $this->header->sequencial_remessa = $this->configuracao['sequencial_remessa'];
         } else {
             $this->header->agencia  = $this->configuracao['agencia'];
@@ -137,6 +139,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
                 $detalhe->conta    = $this->configuracao['conta'];
                 $detalhe->conta_dv = $this->configuracao['conta_dv'];
                 $detalhe->digito_nosso_numero = $this->configuracao['conta_dac'];
+                $detalhe->zeros02 = $boleto['zeros02'];
             } else {
                 $detalhe->agencia          = $this->header->agencia;
                 $detalhe->conta            = $this->header->conta;
@@ -259,7 +262,11 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             }
         }
 
-        $detalhe->codigo_banco = $this->banco['codigo_do_banco'];
+        if($this->codigo_banco == \Cnab\Banco::BRADESCO) {
+            $detalhe->codigo_banco = $boleto['codigo_banco'];
+        }else {
+            $detalhe->codigo_banco = $this->banco['codigo_do_banco'];
+        }
 
         $this->detalhes[] = $detalhe;
 
