@@ -18,7 +18,7 @@ class Field {
 		if(!Picture::validarFormato($format))
 			throw new \InvalidArgumentException("'$format' is not a valid format on $nome");
 		
-		$this->options = $options;
+ 		$this->options = $options;
 		$this->nome         = $nome;
 		$this->cnabLinha    = $linha;
 		$this->format       = $format;
