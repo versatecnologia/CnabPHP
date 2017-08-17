@@ -176,6 +176,10 @@ class Detalhe extends \Cnab\Format\Linha implements \Cnab\Retorno\IDetalhe
         return $nossoNumero;
 	}
 
+	public function getIdentificacaoTitulo(){
+		return $this->segmento_t->identificacao_titulo;
+	}
+
 	/**
 	 * Retorna o objeto \DateTime da data de vencimento do boleto
 	 * @return \DateTime
