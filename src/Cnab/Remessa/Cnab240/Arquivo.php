@@ -234,6 +234,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         if ($this->codigo_banco == \Cnab\Banco::CEF) {
+            $detalhe->segmento_p->codigo_cedente          = $this->configuracao['codigo_cedente'];
             $detalhe->segmento_p->codigo_cedente_dv       = $this->configuracao['codigo_cedente_dv'];
             $detalhe->segmento_p->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
         }
