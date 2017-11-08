@@ -234,6 +234,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         if ($this->codigo_banco == \Cnab\Banco::CEF) {
+            $detalhe->segmento_p->codigo_cedente          = $this->configuracao['codigo_cedente'];
             $detalhe->segmento_p->codigo_cedente_dv       = $this->configuracao['codigo_cedente_dv'];
             $detalhe->segmento_p->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
         }
@@ -316,12 +317,13 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         // SEGMENTO Q -------------------------------
-        $detalhe->segmento_q->tipo_inscricao = $boleto['tipo_inscricao'];
-        $detalhe->segmento_q->codigo_banco   = $this->headerArquivo->codigo_banco;
-        $detalhe->segmento_q->lote_servico   = $this->headerLote->lote_servico;
+        $detalhe->segmento_q->codigo_banco = $this->headerArquivo->codigo_banco;
+        $detalhe->segmento_q->lote_servico = $this->headerLote->lote_servico;
 
         if ($this->codigo_banco != \Cnab\Banco::BANCO_DO_BRASIL) {
             $detalhe->segmento_q->codigo_ocorrencia = $detalhe->segmento_p->codigo_ocorrencia;
+        } else {
+            $detalhe->segmento_q->tipo_inscricao = $boleto['tipo_inscricao'];
         }
 
         if (isset($boleto['sacado_cnpj'])) {
