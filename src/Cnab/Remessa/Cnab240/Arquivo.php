@@ -241,15 +241,14 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         if ($this->codigo_banco == \Cnab\Banco::SICOOB) {
-            $detalhe->segmento_p->nosso_numero = str_pad($boleto['nosso_numero'], 10, '0', STR_PAD_LEFT) . '' . str_pad(
-                    $boleto['parcela'],
-                    2,
-                    '0',
-                    STR_PAD_LEFT
-                ) . '013     ';
+            $detalhe->segmento_p->nosso_numero    = str_pad($boleto['nosso_numero'], 20, '0', STR_PAD_LEFT);
+            $detalhe->segmento_p->codigo_carteira = $boleto['carteira'];
         }
 
-        $detalhe->segmento_p->codigo_carteira = 1; // 1 = Cobrança Simples
+        if (!$detalhe->segmento_p->codigo_carteira) {
+            $detalhe->segmento_p->codigo_carteira = 1; // 1 = Cobrança Simples
+        }
+
         if ($this->layoutVersao === 'sigcb' && $this->codigo_banco == \Cnab\Banco::CEF) {
             $detalhe->segmento_p->modalidade_carteira = '14'; // 21 = (título Sem Registro emissão CAIXA)
         }
@@ -260,7 +259,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
         if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL) {
             $detalhe->segmento_p->nosso_numero = $this->configuracao['nosso_numero_processado'];
-        } else {
+        } elseif ($this->codigo_banco != \Cnab\Banco::SICOOB) {
             $detalhe->segmento_p->nosso_numero = $boleto['nosso_numero'];
         }
 
