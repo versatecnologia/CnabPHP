@@ -520,6 +520,9 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
         if ($this->codigo_banco == \Cnab\Banco::SICOOB) {
             $this->trailerArquivo->qtde_contas_conciliacao = 0;
+            /*Quantidade de Títulos em Cobrança deve ser preenchidas com 0*/
+            $this->trailerLote->qtde_titulo_cobranca_vinculada = \str_pad((int)'', 6, '0', STR_PAD_LEFT);
+            $this->trailerLote->valor_total_titulo_vinculada   = \str_pad((int)'', 15, '0', STR_PAD_LEFT);
         }
 
         if (!$this->trailerLote->validate()) {
