@@ -121,12 +121,6 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $this->headerArquivo->codigo_convenio   = $this->configuracao['codigo_convenio'];
         }
 
-        if ($this->codigo_banco == \Cnab\Banco::CEF) {
-            $this->headerArquivo->codigo_cedente_dv       = $this->configuracao['codigo_cedente_dv'];
-            $this->headerArquivo->codigo_convenio         = $this->configuracao['codigo_convenio'];
-            $this->headerArquivo->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
-        }
-
         if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL) {
             $this->headerArquivo->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
             $this->headerArquivo->codigo_convenio   = $params['codigo_convenio'];
@@ -152,12 +146,14 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $this->headerLote->numero_inscricao = $this->headerArquivo->numero_inscricao;
         $this->headerLote->agencia          = $this->headerArquivo->agencia;
         $this->headerLote->agencia_dv       = $this->headerArquivo->agencia_dv;
-        $this->headerLote->codigo_convenio  = $this->headerArquivo->codigo_convenio;
+
+        if ($this->codigo_banco != \Cnab\Banco::CEF) {
+            $this->headerLote->codigo_convenio = $this->headerArquivo->codigo_convenio;
+        }
 
         if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL) {
             $this->headerLote->codigo_cedente_dv          = $this->headerArquivo->codigo_cedente_dv;
             $this->headerLote->codigo_cedente             = $this->headerArquivo->codigo_cedente;
-            $this->headerLote->codigo_convenio            = $this->headerArquivo->codigo_convenio;
             $this->headerLote->cobranca_cedente           = $this->headerArquivo->cobranca_cedente;
             $this->headerLote->numero_carteira_cobranca   = $this->headerArquivo->numero_carteira_cobranca;
             $this->headerLote->variacao_carteira_cobranca = $this->headerArquivo->variacao_carteira_cobranca;
@@ -184,9 +180,8 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $this->headerLote->data_geracao = $this->headerArquivo->data_geracao;
 
         if ($this->codigo_banco == \Cnab\Banco::CEF) {
-            $this->headerLote->tipo_servico            = 2;
-            $this->headerLote->codigo_cedente_dv       = $this->configuracao['codigo_cedente_dv'];
-            $this->headerLote->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+            $this->headerLote->tipo_servico    = 2;
+            $this->headerLote->codigo_convenio = $this->configuracao['codigo_convenio'];;
         }
 
         $this->trailerLote->codigo_banco = $this->headerArquivo->codigo_banco;
@@ -235,9 +230,16 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         if ($this->codigo_banco == \Cnab\Banco::CEF) {
-            $detalhe->segmento_p->codigo_cedente          = $this->configuracao['codigo_cedente'];
-            $detalhe->segmento_p->codigo_cedente_dv       = $this->configuracao['codigo_cedente_dv'];
-            $detalhe->segmento_p->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+
+            $detalhe->segmento_p->codigo_cedente         = $this->configuracao['codigo_cedente'];
+            $detalhe->segmento_p->uso_exclusivo_caixa_02 = '000';
+            //            $detalhe->segmento_p->modalidade_carteira_sigcb   = 14; // 21 = (título Sem Registro emissão CAIXA)
+            $detalhe->segmento_p->indentificacao_titulo_banco = \str_pad(
+                $boleto['nosso_numero'],
+                15,
+                '0',
+                STR_PAD_LEFT
+            );
         }
 
         if ($this->codigo_banco == \Cnab\Banco::SICOOB) {
@@ -249,17 +251,13 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $detalhe->segmento_p->codigo_carteira = 1; // 1 = Cobrança Simples
         }
 
-        if ($this->layoutVersao === 'sigcb' && $this->codigo_banco == \Cnab\Banco::CEF) {
-            $detalhe->segmento_p->modalidade_carteira = '14'; // 21 = (título Sem Registro emissão CAIXA)
-        }
-
         if ($this->codigo_banco != \Cnab\Banco::BANCO_DO_BRASIL) {
             $detalhe->segmento_p->forma_cadastramento = $boleto['registrado'] ? 1 : 2; // 1 = Com, 2 = Sem Registro
         }
 
         if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL) {
             $detalhe->segmento_p->nosso_numero = $this->configuracao['nosso_numero_processado'];
-        } elseif ($this->codigo_banco != \Cnab\Banco::SICOOB) {
+        } elseif ($this->codigo_banco != \Cnab\Banco::SICOOB AND $this->codigo_banco != \Cnab\Banco::CEF) {
             $detalhe->segmento_p->nosso_numero = $boleto['nosso_numero'];
         }
 
