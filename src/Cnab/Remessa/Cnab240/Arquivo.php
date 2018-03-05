@@ -180,8 +180,10 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $this->headerLote->data_geracao = $this->headerArquivo->data_geracao;
 
         if ($this->codigo_banco == \Cnab\Banco::CEF) {
-            $this->headerLote->tipo_servico    = 2;
-            $this->headerLote->codigo_convenio = $this->configuracao['codigo_convenio'];;
+            $this->headerLote->tipo_servico      = 2;
+            $this->headerLote->codigo_convenio   = $this->configuracao['codigo_convenio'];
+            $this->headerArquivo->codigo_cedente = $this->configuracao['codigo_convenio'];
+            $this->headerLote->codigo_cedente    = $this->configuracao['codigo_convenio'];
         }
 
         $this->trailerLote->codigo_banco = $this->headerArquivo->codigo_banco;
@@ -231,7 +233,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
         if ($this->codigo_banco == \Cnab\Banco::CEF) {
 
-            $detalhe->segmento_p->codigo_cedente         = $this->configuracao['codigo_cedente'];
+            $detalhe->segmento_p->codigo_cedente         = $this->configuracao['codigo_convenio'];
             $detalhe->segmento_p->uso_exclusivo_caixa_02 = '000';
             //            $detalhe->segmento_p->modalidade_carteira_sigcb   = 14; // 21 = (título Sem Registro emissão CAIXA)
             $detalhe->segmento_p->indentificacao_titulo_banco = \str_pad(
