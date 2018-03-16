@@ -1,5 +1,5 @@
 {
-    "name": "mtferreira/cnab_php",
+    "name": "versatecnologia/cnab_php",
     "type": "library",
     "description": "Projeto para criar arquivos de remessas e processar arquivos de retorno no formato CNAB",
     "keywords": ["boleto", "remessa", "retorno"],
@@ -28,7 +28,7 @@
         "codeclimate/php-test-reporter": "dev-master"
     },
     "require": {
-        "mtferreira/cnab_yaml":"dev-master",
+        "versatecnologia/cnab_yaml":"dev-master",
         "php": ">=5.3.0",
         "mustangostang/spyc": "0.5.*"
     },
