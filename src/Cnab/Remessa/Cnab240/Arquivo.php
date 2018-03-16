@@ -11,10 +11,10 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
     private $_data_gravacao;
     private $_data_geracao;
-    public $banco;
-    public $codigo_banco;
-    public $configuracao = array();
-    public $layoutVersao;
+    public  $banco;
+    public  $codigo_banco;
+    public  $configuracao = array();
+    public  $layoutVersao;
     const   QUEBRA_LINHA = "\r\n";
 
     public function __construct($codigo_banco, $layoutVersao = null)
@@ -249,8 +249,9 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         $detalhe->segmento_p->codigo_carteira = 1; // 1 = Cobrança Simples
+
         if ($this->layoutVersao === 'sigcb' && $this->codigo_banco == \Cnab\Banco::CEF) {
-            $detalhe->segmento_p->modalidade_carteira = '14'; // 21 = (título Sem Registro emissão CAIXA)
+            $detalhe->segmento_p->modalidade_carteira = $boleto['registrado'] ? '14' : '24'; // 21 = (título Sem Registro emissão CAIXA)
         }
 
         if ($this->codigo_banco != \Cnab\Banco::BANCO_DO_BRASIL) {
