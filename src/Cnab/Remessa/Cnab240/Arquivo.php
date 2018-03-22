@@ -11,10 +11,10 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
     private $_data_gravacao;
     private $_data_geracao;
-    public  $banco;
-    public  $codigo_banco;
-    public  $configuracao = array();
-    public  $layoutVersao;
+    public $banco;
+    public $codigo_banco;
+    public $configuracao = array();
+    public $layoutVersao;
     const   QUEBRA_LINHA = "\r\n";
 
     public function __construct($codigo_banco, $layoutVersao = null)
@@ -483,7 +483,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $dados = $this->headerArquivo->getEncoded() . self::QUEBRA_LINHA;
         $dados .= $this->headerLote->getEncoded() . self::QUEBRA_LINHA;
 
-        foreach ($this->detalhes as $detalhe) {
+        foreach ($this->detalhes as $index => $detalhe) {
             $qtde_titulo_cobranca_simples++;
             $valor_total_titulo_simples += $detalhe->segmento_p->valor_titulo;
 
@@ -546,7 +546,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         $dados .= $this->trailerLote->getEncoded() . self::QUEBRA_LINHA;
-        $dados .= $this->trailerArquivo->getEncoded() . self::QUEBRA_LINHA;
+        $dados .= $this->trailerArquivo->getEncoded();
 
         return $dados;
     }
