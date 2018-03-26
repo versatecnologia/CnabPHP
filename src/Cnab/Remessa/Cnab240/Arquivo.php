@@ -347,18 +347,18 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL) {
-            $detalhe->segmento_q->bairro     = $this->prepareText($boleto['sacado_bairro']);
+            $detalhe->segmento_q->bairro     = $this->prepareText(trim($boleto['sacado_bairro']));
             $detalhe->segmento_q->cep        = preg_replace('/\d{3}$/', '', $boleto['sacado_cep']);
             $detalhe->segmento_q->sufixo_cep = preg_replace('/\d{5}/', '', $boleto['sacado_cep']);
-            $detalhe->segmento_q->cidade     = $this->prepareText($boleto['sacado_cidade']);
+            $detalhe->segmento_q->cidade     = $this->prepareText(trim($boleto['sacado_cidade']));
             $detalhe->segmento_q->estado     = $boleto['sacado_uf'];
-            $detalhe->segmento_q->endereco   = $this->prepareText($boleto['sacado_logradouro']);
+            $detalhe->segmento_q->endereco   = $this->prepareText(trim($boleto['sacado_logradouro']));
         } else {
-            $detalhe->segmento_q->bairro     = $this->prepareText($boleto['sacado_bairro']);
+            $detalhe->segmento_q->bairro     = $this->prepareText(trim($boleto['sacado_bairro']));
             $detalhe->segmento_q->cep        = str_replace(['-', '.'], '', $boleto['sacado_cep']);
-            $detalhe->segmento_q->cidade     = $this->prepareText($boleto['sacado_cidade']);
+            $detalhe->segmento_q->cidade     = $this->prepareText(trim($boleto['sacado_cidade']));
             $detalhe->segmento_q->estado     = $boleto['sacado_uf'];
-            $detalhe->segmento_q->logradouro = $this->prepareText($boleto['sacado_logradouro']);
+            $detalhe->segmento_q->logradouro = $this->prepareText(trim($boleto['sacado_logradouro']));
         }
 
         // se o titulo for de terceiro, o sacador é o terceiro
