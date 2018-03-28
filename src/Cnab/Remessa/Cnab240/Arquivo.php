@@ -447,8 +447,9 @@ class Arquivo implements \Cnab\Remessa\IArquivo
                 '/\xc3([\xb2-\xb6]|\xb8)/',
                 '/\xc3[\xb9-\xbc]/',
                 '/[^0-9A-Za-z ,\-\.\/]/',
+                '/\s*(=|\+|\\\|\_|\-|\(|\))\s*/',
                 '/\s+([,\.\/\-])/',
-                '/\s+/',
+                '/\s*/',
             ),
             array(
                 'A',
@@ -464,6 +465,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
                 'o',
                 'u',
                 ' ',
+                ' - ',
                 '$1',
                 ' ',
             ),
