@@ -421,6 +421,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
     private function prepareText($text, $remove = null)
     {
         $result = strtoupper($this->removeAccents(trim(html_entity_decode($text))));;
+
         if ($remove) {
             $result = str_replace(str_split($remove), '', $result);
         }
@@ -430,6 +431,8 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
     private function removeAccents($string)
     {
+
+        $string = preg_replace('/[^0-9A-z ,\-\.\/&#;]/i', ' ', $string);
         $string = preg_replace(
             array(
                 '/\xc3[\x80-\x85]/',
@@ -449,7 +452,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $this->isUtf8($string) ? $string : utf8_encode($string)
         );
 
-        $string = preg_replace('/[0-9A-z ,]/i', '', $string);
+        $string = preg_replace('/[^0-9A-z ,\-\.]/i', ' ', $string);
         $string = trim(preg_replace('/\s+/', ' ', $string));
 
         return $string;
