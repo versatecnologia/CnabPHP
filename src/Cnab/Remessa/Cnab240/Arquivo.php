@@ -449,7 +449,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
                 '/\s*[=\+\_\-\(\)]\s*/',
                 '/[^0-9A-Za-z ,\-\.\/]/',
                 '/\s+([,\.\/])/',
-                '/\s*/',
+                '/\s+/',
             ),
             array(
                 'A',
