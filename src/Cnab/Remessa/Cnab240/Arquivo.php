@@ -432,7 +432,6 @@ class Arquivo implements \Cnab\Remessa\IArquivo
     private function removeAccents($string)
     {
 
-        $string = preg_replace('/[^0-9A-z ,\-\.\/&#;]/i', ' ', $string);
         $string = preg_replace(
             array(
                 '/\xc3[\x80-\x85]/',
