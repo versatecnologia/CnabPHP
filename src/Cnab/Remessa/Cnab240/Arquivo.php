@@ -11,10 +11,10 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
     private $_data_gravacao;
     private $_data_geracao;
-    public $banco;
-    public $codigo_banco;
-    public $configuracao = array();
-    public $layoutVersao;
+    public  $banco;
+    public  $codigo_banco;
+    public  $configuracao = array();
+    public  $layoutVersao;
     const   QUEBRA_LINHA = "\r\n";
 
     public function __construct($codigo_banco, $layoutVersao = null)
@@ -346,15 +346,15 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             }
         }
 
-        $detalhe->segmento_q->bairro     = $this->prepareText($boleto['sacado_bairro']);
-        $detalhe->segmento_q->cidade     = $this->prepareText($boleto['sacado_cidade']);
-        $detalhe->segmento_q->estado     = $boleto['sacado_uf'];
+        $detalhe->segmento_q->bairro = $this->prepareText($boleto['sacado_bairro']);
+        $detalhe->segmento_q->cidade = $this->prepareText($boleto['sacado_cidade']);
+        $detalhe->segmento_q->estado = $boleto['sacado_uf'];
 
         if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL) {
             $detalhe->segmento_q->cep        = preg_replace('/\d{3}$/', '', $boleto['sacado_cep']);
             $detalhe->segmento_q->sufixo_cep = preg_replace('/\d{5}/', '', $boleto['sacado_cep']);
             $detalhe->segmento_q->endereco   = $this->prepareText($boleto['sacado_logradouro']);
-        } else if ($this->codigo_banco == \Cnab\Banco::CEF) {
+        } elseif ($this->codigo_banco == \Cnab\Banco::CEF) {
             $detalhe->segmento_q->cep        = preg_replace('/\d{3}$/', '', $boleto['sacado_cep']);
             $detalhe->segmento_q->sufixo_cep = preg_replace('/\d{5}/', '', $boleto['sacado_cep']);
             $detalhe->segmento_q->logradouro = $this->prepareText($boleto['sacado_logradouro']);
@@ -430,7 +430,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
     private function removeAccents($string)
     {
-        return preg_replace(
+        $string = preg_replace(
             array(
                 '/\xc3[\x80-\x85]/',
                 '/\xc3\x87/',
@@ -448,6 +448,11 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             str_split('ACEIOUaceiou', 1),
             $this->isUtf8($string) ? $string : utf8_encode($string)
         );
+
+        $string = preg_replace('/[0-9A-z ,]/i', '', $string);
+        $string = trim(preg_replace('/\s+/', ' ', $string));
+
+        return $string;
     }
 
     private function isUtf8($string)
