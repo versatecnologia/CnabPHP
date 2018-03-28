@@ -228,14 +228,18 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         if ($this->codigo_banco == \Cnab\Banco::BRADESCO) {
-            $detalhe->segmento_p->modalidade_carteira = $boleto['modalidade_carteira'];
+            $detalhe->segmento_p->modalidade_carteira = (
+            $boleto['modalidade_carteira'] ? $boleto['modalidade_carteira'] : $boleto['carteira']
+            );
         }
 
         if ($this->codigo_banco == \Cnab\Banco::CEF) {
 
-            $detalhe->segmento_p->codigo_cedente         = $this->configuracao['codigo_convenio'];
-            $detalhe->segmento_p->uso_exclusivo_caixa_02 = '000';
-            //            $detalhe->segmento_p->modalidade_carteira_sigcb   = 14; // 21 = (título Sem Registro emissão CAIXA)
+            $detalhe->segmento_p->codigo_cedente              = $this->configuracao['codigo_convenio'];
+            $detalhe->segmento_p->uso_exclusivo_caixa_02      = '000';
+            $detalhe->segmento_p->modalidade_carteira_sigcb   = (
+            $boleto['modalidade_carteira'] ? $boleto['modalidade_carteira'] : $boleto['carteira']
+            );
             $detalhe->segmento_p->indentificacao_titulo_banco = \str_pad(
                 $boleto['nosso_numero'],
                 15,
