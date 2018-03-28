@@ -446,13 +446,31 @@ class Arquivo implements \Cnab\Remessa\IArquivo
                 '/\xc3[\xac-\xaf]/',
                 '/\xc3([\xb2-\xb6]|\xb8)/',
                 '/\xc3[\xb9-\xbc]/',
+                '/[^0-9A-Za-z ,\-\.\/]/',
+                '/\s+([,\.\/\-])/',
+                '/\s+/',
             ),
-            str_split('ACEIOUaceiou', 1),
+            array(
+                'A',
+                'C',
+                'E',
+                'I',
+                'O',
+                'U',
+                'a',
+                'c',
+                'e',
+                'i',
+                'o',
+                'u',
+                ' ',
+                '$1',
+                ' ',
+            ),
             $this->isUtf8($string) ? $string : utf8_encode($string)
         );
 
-        $string = preg_replace('/[^0-9A-z ,\-\.]/i', ' ', $string);
-        $string = trim(preg_replace('/\s+/', ' ', $string));
+        $string = trim(trim($string, ',./-'));
 
         return $string;
     }
