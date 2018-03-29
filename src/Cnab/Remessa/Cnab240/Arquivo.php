@@ -184,6 +184,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $this->headerLote->codigo_convenio   = $this->configuracao['codigo_convenio'];
             $this->headerArquivo->codigo_cedente = $this->configuracao['codigo_convenio'];
             $this->headerLote->codigo_cedente    = $this->configuracao['codigo_convenio'];
+            $this->headerLote->uso_exclusivo_febraban_02    = "          ";
         }
 
         $this->trailerLote->codigo_banco = $this->headerArquivo->codigo_banco;
@@ -294,7 +295,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
         if ($boleto['valor_desconto'] > 0) {
             $detalhe->segmento_p->codigo_desconto_1 = $boleto['cod_desc_1'] ? $boleto['cod_desc_1'] : 1; // valor fixo
-            $detalhe->segmento_p->data_desconto_1   = $boleto['data_desconto'];
+            $detalhe->segmento_p->data_desconto_1   = $boleto['data_desconto']? new \DateTime($boleto['data_desconto']):0;
             $detalhe->segmento_p->valor_desconto_1  = $boleto['valor_desconto'];
         } else {
             $detalhe->segmento_p->data_desconto_1   = 0;
@@ -404,13 +405,13 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
         if (isset($boleto['cod_desc_2'])) {
             $detalhe->segmento_r->codigo_desconto_02 = $boleto['cod_desc_2'];
-            $detalhe->segmento_r->data_desconto_02   = $boleto['data_desconto_2'];
+            $detalhe->segmento_r->data_desconto_02   = $boleto['data_desconto_2']?new \DateTime($boleto['data_desconto_2']):0;
             $detalhe->segmento_r->valor_desconto_02  = $boleto['valor_desconto_2'];
         }
 
         if (isset($boleto['cod_desc_3'])) {
             $detalhe->segmento_r->codigo_desconto_03 = $boleto['cod_desc_3'];
-            $detalhe->segmento_r->data_desconto_03   = $boleto['data_desconto_3'];
+            $detalhe->segmento_r->data_desconto_03   = $boleto['data_desconto_3']? new \DateTime($boleto['data_desconto_3']):0;
             $detalhe->segmento_r->valor_desconto_03  = $boleto['valor_desconto_3'];
         }
 
