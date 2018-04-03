@@ -180,11 +180,11 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $this->headerLote->data_geracao = $this->headerArquivo->data_geracao;
 
         if ($this->codigo_banco == \Cnab\Banco::CEF) {
-            $this->headerLote->tipo_servico      = 2;
-            $this->headerLote->codigo_convenio   = $this->configuracao['codigo_convenio'];
-            $this->headerArquivo->codigo_cedente = $this->configuracao['codigo_convenio'];
-            $this->headerLote->codigo_cedente    = $this->configuracao['codigo_convenio'];
-            $this->headerLote->uso_exclusivo_febraban_02    = "          ";
+            $this->headerLote->tipo_servico              = 2;
+            $this->headerLote->codigo_convenio           = $this->configuracao['codigo_convenio'];
+            $this->headerArquivo->codigo_cedente         = $this->configuracao['codigo_convenio'];
+            $this->headerLote->codigo_cedente            = $this->configuracao['codigo_convenio'];
+            $this->headerLote->uso_exclusivo_febraban_02 = "          ";
         }
 
         $this->trailerLote->codigo_banco = $this->headerArquivo->codigo_banco;
@@ -295,7 +295,9 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
         if ($boleto['valor_desconto'] > 0) {
             $detalhe->segmento_p->codigo_desconto_1 = $boleto['cod_desc_1'] ? $boleto['cod_desc_1'] : 1; // valor fixo
-            $detalhe->segmento_p->data_desconto_1   = $boleto['data_desconto']? new \DateTime($boleto['data_desconto']):0;
+            $detalhe->segmento_p->data_desconto_1   = $boleto['data_desconto'] ? new \DateTime(
+                $boleto['data_desconto']
+            ) : 0;
             $detalhe->segmento_p->valor_desconto_1  = $boleto['valor_desconto'];
         } else {
             $detalhe->segmento_p->data_desconto_1   = 0;
@@ -311,6 +313,13 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $detalhe->segmento_p->codigo_baixa      = 1; // Baixar
             $detalhe->segmento_p->prazo_baixa       = $boleto['prazo']; // Baixar automaticamente após 30 dias
             $detalhe->segmento_p->codigo_ocorrencia = $boleto['codigo_ocorrencia'];
+        }
+
+        if (
+            $boleto['codigo_ocorrencia'] == \Cnab\Movimento::ALTERACAO_DE_OUTROS_DADOS &&
+            in_array($boleto['identificacao_emissao'], array(4, 5))
+        ) {
+            $detalhe->segmento_p->identificacao_emissao = $boleto['identificacao_emissao'];
         }
 
         $detalhe->segmento_p->prazo_protesto = 0;
@@ -405,13 +414,17 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
         if (isset($boleto['cod_desc_2'])) {
             $detalhe->segmento_r->codigo_desconto_02 = $boleto['cod_desc_2'];
-            $detalhe->segmento_r->data_desconto_02   = $boleto['data_desconto_2']?new \DateTime($boleto['data_desconto_2']):0;
+            $detalhe->segmento_r->data_desconto_02   = $boleto['data_desconto_2'] ? new \DateTime(
+                $boleto['data_desconto_2']
+            ) : 0;
             $detalhe->segmento_r->valor_desconto_02  = $boleto['valor_desconto_2'];
         }
 
         if (isset($boleto['cod_desc_3'])) {
             $detalhe->segmento_r->codigo_desconto_03 = $boleto['cod_desc_3'];
-            $detalhe->segmento_r->data_desconto_03   = $boleto['data_desconto_3']? new \DateTime($boleto['data_desconto_3']):0;
+            $detalhe->segmento_r->data_desconto_03   = $boleto['data_desconto_3'] ? new \DateTime(
+                $boleto['data_desconto_3']
+            ) : 0;
             $detalhe->segmento_r->valor_desconto_03  = $boleto['valor_desconto_3'];
         }
 
