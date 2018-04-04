@@ -235,7 +235,6 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         if ($this->codigo_banco == \Cnab\Banco::CEF) {
-
             $detalhe->segmento_p->codigo_cedente              = $this->configuracao['codigo_convenio'];
             $detalhe->segmento_p->uso_exclusivo_caixa_02      = '000';
             $detalhe->segmento_p->modalidade_carteira_sigcb   = (
@@ -364,16 +363,21 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $detalhe->segmento_q->cidade = $this->prepareText($boleto['sacado_cidade']);
         $detalhe->segmento_q->estado = $boleto['sacado_uf'];
 
+        $cep     = preg_replace('/[^0-9]/', '', $boleto['sacado_cep']);
+        $cep     = str_pad($cep, 8, '0');
+        $sufixoCep  = substr($cep, 5, 3);
+        $prefixoCep = substr($cep, 0, 5);
+
         if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL) {
-            $detalhe->segmento_q->cep        = preg_replace('/\d{3}$/', '', $boleto['sacado_cep']);
-            $detalhe->segmento_q->sufixo_cep = preg_replace('/\d{5}/', '', $boleto['sacado_cep']);
+            $detalhe->segmento_q->cep        = $prefixoCep;
+            $detalhe->segmento_q->sufixo_cep = $sufixoCep;
             $detalhe->segmento_q->endereco   = $this->prepareText($boleto['sacado_logradouro']);
         } elseif ($this->codigo_banco == \Cnab\Banco::CEF) {
-            $detalhe->segmento_q->cep        = preg_replace('/\d{3}$/', '', $boleto['sacado_cep']);
-            $detalhe->segmento_q->sufixo_cep = preg_replace('/\d{5}/', '', $boleto['sacado_cep']);
+            $detalhe->segmento_q->cep        = $prefixoCep;
+            $detalhe->segmento_q->sufixo_cep = $sufixoCep;
             $detalhe->segmento_q->logradouro = $this->prepareText($boleto['sacado_logradouro']);
         } else {
-            $detalhe->segmento_q->cep        = str_replace(['-', '.'], '', $boleto['sacado_cep']);
+            $detalhe->segmento_q->cep        = $cep;
             $detalhe->segmento_q->logradouro = $this->prepareText($boleto['sacado_logradouro']);
         }
 
