@@ -37,6 +37,15 @@ class Detalhe extends \Cnab\Format\Linha implements \Cnab\Retorno\IDetalhe
 	}
 
 	/**
+	 * Retorno o código do movimento da baixa
+	 * @return int
+	 */
+	public function getCodigoMovimento()
+	{
+		return (int)$this->segmento_t->codigo_movimento;
+	}
+
+	/**
 	 * Retorno se é uma baixa rejeitada
 	 * @return Boolean
 	 */
