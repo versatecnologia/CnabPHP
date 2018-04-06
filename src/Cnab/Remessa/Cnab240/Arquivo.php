@@ -315,7 +315,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         if (
-            $boleto['codigo_ocorrencia'] == \Cnab\Movimento::ALTERACAO_DE_OUTROS_DADOS &&
+            $boleto['codigo_ocorrencia'] == \Cnab\Movimento::REMESSA_ALTERACAO_DE_OUTROS_DADOS &&
             in_array($boleto['identificacao_emissao'], array(4, 5))
         ) {
             $detalhe->segmento_p->identificacao_emissao = $boleto['identificacao_emissao'];
