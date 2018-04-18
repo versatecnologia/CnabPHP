@@ -246,10 +246,21 @@ class Arquivo implements \Cnab\Remessa\IArquivo
                 '0',
                 STR_PAD_LEFT
             );
+        } else {
+            $nossoNumero = $boleto['nosso_numero'];
+
+            if (!$nossoNumero && $boleto['nosso_numero_processado']) {
+                $nossoNumero = $boleto['nosso_numero_processado'];
+            }
+
+            if (!$nossoNumero && $this->configuracao['nosso_numero_processado']) {
+                $nossoNumero = $this->configuracao['nosso_numero_processado'];
+            }
+
+            $detalhe->segmento_p->nosso_numero = $nossoNumero;
         }
 
         if ($this->codigo_banco == \Cnab\Banco::SICOOB) {
-            $detalhe->segmento_p->nosso_numero    = $boleto['nosso_numero'];
             $detalhe->segmento_p->codigo_carteira = $boleto['carteira'];
         }
 
@@ -259,12 +270,6 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
         if ($this->codigo_banco != \Cnab\Banco::BANCO_DO_BRASIL) {
             $detalhe->segmento_p->forma_cadastramento = $boleto['registrado'] ? 1 : 2; // 1 = Com, 2 = Sem Registro
-        }
-
-        if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL) {
-            $detalhe->segmento_p->nosso_numero = $this->configuracao['nosso_numero_processado'];
-        } elseif ($this->codigo_banco != \Cnab\Banco::SICOOB AND $this->codigo_banco != \Cnab\Banco::CEF) {
-            $detalhe->segmento_p->nosso_numero = $boleto['nosso_numero'];
         }
 
         if ($this->codigo_banco == \Cnab\Banco::SICOOB) {
@@ -363,8 +368,8 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $detalhe->segmento_q->cidade = $this->prepareText($boleto['sacado_cidade']);
         $detalhe->segmento_q->estado = $boleto['sacado_uf'];
 
-        $cep     = preg_replace('/[^0-9]/', '', $boleto['sacado_cep']);
-        $cep     = str_pad($cep, 8, '0');
+        $cep        = preg_replace('/[^0-9]/', '', $boleto['sacado_cep']);
+        $cep        = str_pad($cep, 8, '0');
         $sufixoCep  = substr($cep, 5, 3);
         $prefixoCep = substr($cep, 0, 5);
 
