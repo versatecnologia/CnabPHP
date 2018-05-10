@@ -82,7 +82,6 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $campos[] = 'numero_sequencial_arquivo';
             $campos[] = 'codigo_convenio';
             $campos[] = 'cobranca_cedente';
-            $campos[] = 'nosso_numero_processado';
         }
 
         foreach ($campos as $campo) {
