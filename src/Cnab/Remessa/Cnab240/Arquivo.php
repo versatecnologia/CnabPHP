@@ -324,7 +324,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
         $detalhe->segmento_p->prazo_protesto = 0;
 
-        if ($this->codigo_banco == \Cnab\Banco::SICOOB || $this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL) {
+        if ($boleto['prazo_protesto'] && ($this->codigo_banco == \Cnab\Banco::SICOOB || $this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL)) {
             $detalhe->segmento_p->codigo_protesto = 1;
             $detalhe->segmento_p->codigo_baixa    = 0;
             $detalhe->segmento_p->prazo_protesto  = $boleto['prazo_protesto'];
