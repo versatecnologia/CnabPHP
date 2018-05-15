@@ -239,11 +239,8 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $detalhe->segmento_p->modalidade_carteira_sigcb   = (
             $boleto['modalidade_carteira'] ? $boleto['modalidade_carteira'] : $boleto['carteira']
             );
-            $detalhe->segmento_p->indentificacao_titulo_banco = \str_pad(
-                $boleto['nosso_numero'],
-                15,
-                '0',
-                STR_PAD_LEFT
+            $detalhe->segmento_p->indentificacao_titulo_banco = (
+            \str_pad($boleto['nosso_numero'], 15, '0', STR_PAD_LEFT)
             );
         } else {
             $nossoNumero = $boleto['nosso_numero'];
