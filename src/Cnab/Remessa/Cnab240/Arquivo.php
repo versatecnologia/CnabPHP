@@ -157,7 +157,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $this->headerLote->numero_carteira_cobranca   = $this->headerArquivo->numero_carteira_cobranca;
             $this->headerLote->variacao_carteira_cobranca = $this->headerArquivo->variacao_carteira_cobranca;
             $this->headerLote->numero_inscricao           = $this->headerArquivo->numero_inscricao;
-            $this->headerLote->tipo_servico               = 2;
+            $this->headerLote->tipo_servico               = 1;
             $this->headerLote->numero_sequencial_arquivo  = $this->headerArquivo->numero_sequencial_arquivo;
         } else {
             $this->headerLote->codigo_cedente            = $this->headerArquivo->codigo_cedente;
