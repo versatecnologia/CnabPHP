@@ -580,8 +580,8 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $this->trailerArquivo->qtde_lotes                   = 1;
             $this->trailerArquivo->qtde_registros               = $this->trailerLote->qtde_registro_lote + 2;
         } else {
-            $this->trailerArquivo->quantidade_lotes_arquivo     = $this->trailerLote->qtde_registro_lote + 2;
-            $this->trailerArquivo->quantidade_registros_arquivo = 1;
+            $this->trailerArquivo->quantidade_lotes_arquivo     = 1;
+            $this->trailerArquivo->quantidade_registros_arquivo = $this->trailerLote->qtde_registro_lote + 2;
         }
 
         if ($this->codigo_banco == \Cnab\Banco::SICOOB) {
