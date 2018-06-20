@@ -351,8 +351,9 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             }
         } else {
             if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL) {
-                $detalhe->segmento_q->nome_sacador_avalista = $this->prepareText($boleto['sacado_nome']);
-                $detalhe->segmento_q->numero_inscricao      = $this->prepareText($boleto['sacado_cpf'], '.-/');
+                $detalhe->segmento_q->tipo_inscricao = '1';
+                $detalhe->segmento_q->numero_inscricao = $this->prepareText($boleto['sacado_cpf'], '.-/');
+                $detalhe->segmento_q->sacador_nome     = $this->prepareText($boleto['sacado_nome']);
             } else {
                 $detalhe->segmento_q->sacado_codigo_inscricao = '1';
                 $detalhe->segmento_q->sacado_numero_inscricao = $this->prepareText($boleto['sacado_cpf'], '.-/');
@@ -387,16 +388,14 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             if ($this->codigo_banco != \Cnab\Banco::BANCO_DO_BRASIL) {
                 $detalhe->segmento_q->sacador_codigo_inscricao = $this->headerArquivo->codigo_inscricao;
                 $detalhe->segmento_q->sacador_numero_inscricao = $this->headerArquivo->numero_inscricao;
+                $detalhe->segmento_q->sacador_nome = $this->headerArquivo->nome_empresa;
             }
-
-            $detalhe->segmento_q->sacador_nome = $this->headerArquivo->nome_empresa;
         } else {
             if ($this->codigo_banco != \Cnab\Banco::BANCO_DO_BRASIL) {
                 $detalhe->segmento_q->sacador_codigo_inscricao = '0';
                 $detalhe->segmento_q->sacador_numero_inscricao = '0';
+                $detalhe->segmento_q->sacador_nome = '';
             }
-
-            $detalhe->segmento_q->sacador_nome = '';
         }
 
         // SEGMENTO R -------------------------------
