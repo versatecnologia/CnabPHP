@@ -203,7 +203,11 @@ class Detalhe extends \Cnab\Format\Linha implements \Cnab\Retorno\IDetalhe
 
     public function getIdentificacaoTitulo()
     {
-        return $this->segmento_t->identificacao_titulo;
+        if ($this->segmento_t->existField('identificacao_titulo')) {
+            return $this->segmento_t->identificacao_titulo;
+        } else {
+            return null;
+        }
     }
 
     /**
