@@ -407,7 +407,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         if ($boleto['valor_multa'] > 0) {
-            $detalhe->segmento_r->codigo_multa = 2;
+            $detalhe->segmento_r->codigo_multa = 1;
             $detalhe->segmento_r->valor_multa  = $boleto['valor_multa'];
             $detalhe->segmento_r->data_multa   = $boleto['data_multa'] ? new \DateTime(
                 $boleto['data_multa']
