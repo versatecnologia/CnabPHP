@@ -69,6 +69,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $campos[] = 'codigo_cedente_dv';
             $campos[] = 'numero_sequencial_arquivo';
             $campos[] = 'codigo_convenio';
+            $campos[] = 'qtde_contas_conciliacao';
             $campos[] = 'agencia_mais_cedente_dv';
         }
 
@@ -118,6 +119,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         if ($this->codigo_banco == \Cnab\Banco::BRADESCO) {
             $this->headerArquivo->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
             $this->headerArquivo->codigo_convenio   = $this->configuracao['codigo_convenio'];
+            $this->trailerArquivo->qtde_contas_conciliacao = $this->configuracao['qtde_contas_conciliacao'];
         }
 
         if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL) {
@@ -228,9 +230,14 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         if ($this->codigo_banco == \Cnab\Banco::BRADESCO) {
-            $detalhe->segmento_p->modalidade_carteira = (
-            $boleto['modalidade_carteira'] ? $boleto['modalidade_carteira'] : $boleto['carteira']
-            );
+            if($detalhe->segmento_p->existField('modalidade_carteira')){
+                $detalhe->segmento_p->modalidade_carteira = (
+                $boleto['modalidade_carteira'] ? $boleto['modalidade_carteira'] : $boleto['carteira']
+                );
+            }
+
+            $detalhe->segmento_p->codigo_carteira = 1;
+            $detalhe->segmento_p->forma_cadastramento = 1;
         }
 
         if ($this->codigo_banco == \Cnab\Banco::CEF) {
