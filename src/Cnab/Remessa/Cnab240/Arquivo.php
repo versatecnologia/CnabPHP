@@ -117,8 +117,8 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         if ($this->codigo_banco == \Cnab\Banco::BRADESCO) {
-            $this->headerArquivo->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
-            $this->headerArquivo->codigo_convenio   = $this->configuracao['codigo_convenio'];
+            $this->headerArquivo->codigo_cedente_dv        = $this->configuracao['codigo_cedente_dv'];
+            $this->headerArquivo->codigo_convenio          = $this->configuracao['codigo_convenio'];
             $this->trailerArquivo->qtde_contas_conciliacao = $this->configuracao['qtde_contas_conciliacao'];
         }
 
@@ -173,8 +173,9 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         if ($this->codigo_banco == \Cnab\Banco::BRADESCO) {
-            $this->headerLote->codigo_convenio   = $this->configuracao['codigo_convenio'];
+            $this->headerLote->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
             $this->headerLote->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
+            $this->headerLote->codigo_convenio   = $this->configuracao['codigo_convenio'];
         }
 
         $this->headerLote->nome_empresa = $this->headerArquivo->nome_empresa;
@@ -196,12 +197,16 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
     public function insertDetalhe(array $boleto)
     {
-        $dateVencimento = $boleto['data_vencimento'] instanceof \DateTime ? $boleto['data_vencimento'] : new \DateTime(
-            $boleto['data_vencimento']
-        );
-        $dateCadastro   = $boleto['data_cadastro'] instanceof \DateTime ? $boleto['data_cadastro'] : new \DateTime(
-            $boleto['data_cadastro']
-        );
+        $dateVencimento = $boleto['data_vencimento'] instanceof \DateTime
+            ? $boleto['data_vencimento']
+            : new \DateTime(
+                $boleto['data_vencimento']
+            );
+        $dateCadastro   = $boleto['data_cadastro'] instanceof \DateTime
+            ? $boleto['data_cadastro']
+            : new \DateTime(
+                $boleto['data_cadastro']
+            );
 
         $detalhe = new Detalhe($this);
 
@@ -227,17 +232,17 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $detalhe->segmento_p->codigo_cedente          = $this->configuracao['codigo_cedente'];
             $detalhe->segmento_p->codigo_cedente_dv       = $this->configuracao['codigo_cedente_dv'];
             $detalhe->segmento_p->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+            $detalhe->segmento_p->verificador_agencia_cobradora = $this->configuracao['agencia_dv'];
         }
 
         if ($this->codigo_banco == \Cnab\Banco::BRADESCO) {
-            if($detalhe->segmento_p->existField('modalidade_carteira')){
+            if ($detalhe->segmento_p->existField('modalidade_carteira')) {
                 $detalhe->segmento_p->modalidade_carteira = (
                 $boleto['modalidade_carteira'] ? $boleto['modalidade_carteira'] : $boleto['carteira']
                 );
             }
 
             $detalhe->segmento_p->codigo_carteira = 1;
-            $detalhe->segmento_p->forma_cadastramento = 1;
         }
 
         if ($this->codigo_banco == \Cnab\Banco::CEF) {
@@ -249,7 +254,13 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $detalhe->segmento_p->indentificacao_titulo_banco = (
             \str_pad($boleto['nosso_numero'], 15, '0', STR_PAD_LEFT)
             );
-        } else {
+        } elseif($this->codigo_banco == \Cnab\Banco::BRADESCO){
+            $detalhe->segmento_p->identificacao_produto = str_pad($boleto["carteira"], 3, STR_PAD_LEFT);
+            $detalhe->segmento_p->nosso_numero = $boleto["nosso_numero"];
+            $detalhe->segmento_p->digito_nosso_numero = $boleto["digito_nosso_numero"];
+            $detalhe->segmento_p->tipo_documento = 1;
+            $detalhe->segmento_p->juros_mora = $boleto['juros_de_um_dia'];
+        } {
             $nossoNumero = $boleto['nosso_numero'];
 
             if (!$nossoNumero && $boleto['nosso_numero_processado']) {
@@ -272,7 +283,8 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         if ($this->codigo_banco != \Cnab\Banco::BANCO_DO_BRASIL) {
-            $detalhe->segmento_p->forma_cadastramento = $boleto['registrado'] ? 1 : 2; // 1 = Com, 2 = Sem Registro
+            $detalhe->segmento_p->forma_cadastramento = $boleto['registrado'] ? $boleto['registrado']
+                : 2; // 1 = Com, 2 = Sem Registro
         }
 
         if ($this->codigo_banco == \Cnab\Banco::SICOOB) {
@@ -288,7 +300,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
         if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL) {
             $detalhe->segmento_p->juros_mora_dia = $boleto['juros_de_um_dia'];
-        } else {
+        } elseif ($this->codigo_banco != \Cnab\Banco::BRADESCO) {
             $detalhe->segmento_p->uso_empresa      = $boleto['numero_documento'];
             $detalhe->segmento_p->valor_juros_mora = $boleto['juros_de_um_dia'];
         }
@@ -318,8 +330,11 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
         if ($this->codigo_banco != \Cnab\Banco::BANCO_DO_BRASIL) {
             $detalhe->segmento_p->codigo_baixa      = 1; // Baixar
-            $detalhe->segmento_p->prazo_baixa       = $boleto['prazo']; // Baixar automaticamente após 30 dias
             $detalhe->segmento_p->codigo_ocorrencia = $boleto['codigo_ocorrencia'];
+
+            if ($detalhe->segmento_p->existField("prazo_baixa")) {
+                $detalhe->segmento_p->prazo_baixa = $boleto['prazo'];
+            }
         }
 
         if (
@@ -329,9 +344,9 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             $detalhe->segmento_p->identificacao_emissao = $boleto['identificacao_emissao'];
         }
 
-        $detalhe->segmento_p->prazo_protesto = 0;
+        $detalhe->segmento_p->prazo_protesto = $boleto["prazo_protesto"] ? $boleto["prazo_protesto"] : 0;
 
-        if ($boleto['prazo_protesto'] && ($this->codigo_banco == \Cnab\Banco::SICOOB || $this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL)) {
+        if ($boleto['prazo_protesto'] && ($this->codigo_banco == \Cnab\Banco::SICOOB || $this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL || $this->codigo_banco == \Cnab\Banco::BRADESCO)) {
             $detalhe->segmento_p->codigo_protesto = 1;
             $detalhe->segmento_p->codigo_baixa    = 0;
             $detalhe->segmento_p->prazo_protesto  = $boleto['prazo_protesto'];
@@ -358,7 +373,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             }
         } else {
             if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL) {
-                $detalhe->segmento_q->tipo_inscricao = '1';
+                $detalhe->segmento_q->tipo_inscricao   = '1';
                 $detalhe->segmento_q->numero_inscricao = $this->prepareText($boleto['sacado_cpf'], '.-/');
                 $detalhe->segmento_q->sacador_nome     = $this->prepareText($boleto['sacado_nome']);
             } else {
@@ -395,13 +410,13 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             if ($this->codigo_banco != \Cnab\Banco::BANCO_DO_BRASIL) {
                 $detalhe->segmento_q->sacador_codigo_inscricao = $this->headerArquivo->codigo_inscricao;
                 $detalhe->segmento_q->sacador_numero_inscricao = $this->headerArquivo->numero_inscricao;
-                $detalhe->segmento_q->sacador_nome = $this->headerArquivo->nome_empresa;
+                $detalhe->segmento_q->sacador_nome             = $this->headerArquivo->nome_empresa;
             }
         } else {
             if ($this->codigo_banco != \Cnab\Banco::BANCO_DO_BRASIL) {
                 $detalhe->segmento_q->sacador_codigo_inscricao = '0';
                 $detalhe->segmento_q->sacador_numero_inscricao = '0';
-                $detalhe->segmento_q->sacador_nome = '';
+                $detalhe->segmento_q->sacador_nome             = '';
             }
         }
 
@@ -534,10 +549,10 @@ class Arquivo implements \Cnab\Remessa\IArquivo
 
         // valida os dados
         if (!$this->headerArquivo->validate()) {
-            throw new \InvalidArgumentException($this->headerArquivo->last_error);
+            throw new \InvalidArgumentException("Erro no headerArquivo: " . $this->headerArquivo->last_error);
         }
         if (!$this->headerLote->validate()) {
-            throw new \InvalidArgumentException($this->headerLote->last_error);
+            throw new \InvalidArgumentException("Erro no headerLote: " . $this->headerLote->last_error);
         }
 
         $dados = $this->headerArquivo->getEncoded() . self::QUEBRA_LINHA;
