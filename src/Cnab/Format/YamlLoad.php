@@ -72,6 +72,7 @@ class YamlLoad
         foreach ($array as $key => $fields) {
             if (in_array($key, $keys)) {
                 foreach ($fields as $name => $info) {
+
                     $picture = $info['picture'];
                     $start   = $info['pos'][0];
                     $end     = $info['pos'][1];

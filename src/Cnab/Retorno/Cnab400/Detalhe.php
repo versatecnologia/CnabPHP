@@ -206,6 +206,15 @@ class Detalhe extends \Cnab\Format\Linha implements \Cnab\Retorno\IDetalhe
 	{
 		return $this->agencia;
 	}
+
+	/**
+	 * Retorna o número da carteira do boleto
+	 * @return String
+	 */
+	public function getConta()
+	{
+		return $this->conta;
+	}
 	
 	/**
 	 * Retorna a agencia cobradora

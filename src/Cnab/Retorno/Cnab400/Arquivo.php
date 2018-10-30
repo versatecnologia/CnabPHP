@@ -61,7 +61,13 @@ class Arquivo implements \Cnab\Retorno\IArquivo
 	 */
 	public function getConta()
 	{
-		return $this->header->getConta();
+		$conta = $this->header->getConta();
+
+		if(!$conta && isset($this->detalhes[0])){
+			$conta = $this->detalhes[0]->getConta();
+		}
+
+		return $conta;
 	}
     
     
