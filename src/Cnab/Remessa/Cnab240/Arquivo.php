@@ -117,13 +117,10 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         }
 
         if ($this->codigo_banco == \Cnab\Banco::BRADESCO) {
-            $this->headerArquivo->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
-            $this->headerArquivo->codigo_convenio   = str_pad(
-                $this->configuracao['codigo_convenio'],
-                20,
-                0,
-                STR_PAD_LEFT
-            );
+            $this->headerArquivo->codigo_cedente_dv          = $this->configuracao['codigo_cedente_dv'];
+            $this->headerArquivo->codigo_convenio            = str_pad($this->configuracao['codigo_convenio'], 20, 0, STR_PAD_LEFT);
+            $this->trailerArquivo->qtde_contas_conciliacao   = str_pad(0, 6, 0, STR_PAD_LEFT);
+            $this->trailerLote->valor_total_titulo_vinculada = 0;
         }
 
         if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL) {
@@ -196,7 +193,8 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $this->trailerLote->codigo_banco = $this->headerArquivo->codigo_banco;
         $this->trailerLote->lote_servico = $this->headerLote->lote_servico;
 
-        $this->trailerArquivo->codigo_banco = $this->headerArquivo->codigo_banco;
+        $this->trailerArquivo->codigo_banco            = $this->headerArquivo->codigo_banco;
+        $this->trailerArquivo->qtde_contas_conciliacao = $this->configuracao['qtde_contas_conciliacao'];
     }
 
     public function insertDetalhe(array $boleto)
@@ -242,12 +240,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         if ($this->codigo_banco == \Cnab\Banco::BRADESCO) {
             $detalhe->segmento_p->codigo_cedente                = $this->configuracao['codigo_cedente'];
             $detalhe->segmento_p->codigo_cedente_dv             = $this->configuracao['codigo_cedente_dv'];
-            $detalhe->segmento_p->dias_baixa_devolucao          = str_pad(
-                $boleto["prazo_protesto"],
-                3,
-                0,
-                STR_PAD_LEFT
-            );
+            $detalhe->segmento_p->dias_baixa_devolucao          = str_pad(10, 3, 0, STR_PAD_LEFT);
             $detalhe->segmento_p->verificador_agencia_cobradora = $this->configuracao['agencia_dv'];
         }
 
@@ -271,7 +264,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
             \str_pad($boleto['nosso_numero'], 15, '0', STR_PAD_LEFT)
             );
         } elseif ($this->codigo_banco == \Cnab\Banco::BRADESCO) {
-            $detalhe->segmento_p->identificacao_produto = str_pad($boleto["carteira"], 3, '0', STR_PAD_LEFT);
+            $detalhe->segmento_p->identificacao_produto = str_pad($boleto["carteira_conta"], 3, '0', STR_PAD_LEFT);
             $detalhe->segmento_p->nosso_numero          = (int)$boleto["nosso_numero_bradesco_240"];
             $detalhe->segmento_p->digito_nosso_numero   = $boleto["nosso_numero_dv_bradesco_240"];
             $detalhe->segmento_p->tipo_documento        = 1;
