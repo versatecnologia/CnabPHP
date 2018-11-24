@@ -176,7 +176,10 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         if ($this->codigo_banco == \Cnab\Banco::BRADESCO) {
             $this->headerLote->codigo_cedente_dv           = $this->configuracao['codigo_cedente_dv'];
             $this->headerLote->codigo_convenio             = $this->headerArquivo->codigo_convenio;
-            $this->trailerArquivo->qtde_contas_conciliacao = $this->configuracao['qtde_contas_conciliacao'];
+
+            if ($this->trailerArquivo->existField('qtde_contas_conciliacao')) {
+                $this->trailerArquivo->qtde_contas_conciliacao = $this->configuracao['qtde_contas_conciliacao'];
+            }
         }
 
         $this->headerLote->nome_empresa = $this->headerArquivo->nome_empresa;
@@ -194,7 +197,10 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $this->trailerLote->lote_servico = $this->headerLote->lote_servico;
 
         $this->trailerArquivo->codigo_banco            = $this->headerArquivo->codigo_banco;
-        $this->trailerArquivo->qtde_contas_conciliacao = $this->configuracao['qtde_contas_conciliacao'];
+
+        if ($this->trailerArquivo->existField('qtde_contas_conciliacao')) {
+            $this->trailerArquivo->qtde_contas_conciliacao = $this->configuracao['qtde_contas_conciliacao'];
+        }
     }
 
     public function insertDetalhe(array $boleto)
