@@ -327,6 +327,19 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $detalhe->segmento_p->codigo_juros_mora = $boleto['codigo_juros_mora']; // 1 = Por dia
         $detalhe->segmento_p->data_juros_mora   = $dateVencimento;
 
+        // Cód.: 3 = Isento logo não se deve passar tais dados
+        if ($detalhe->segmento_p->codigo_juros_mora == 3)
+        {
+            $detalhe->segmento_p->data_juros_mora = str_pad('', 8, '0');
+            $detalhe->segmento_p->valor_juros_mora = str_pad('', 15, '0');
+            // Se não há valor logo é isento
+        } elseif (!$detalhe->segmento_p->valor_juros_mora)
+        {
+            $detalhe->segmento_p->data_juros_mora = str_pad('', 8, '0');
+            $detalhe->segmento_p->valor_juros_mora = str_pad('', 15, '0');
+            $detalhe->segmento_p->codigo_juros_mora = 3;
+        }
+
         if ($boleto['valor_desconto'] > 0) {
             $detalhe->segmento_p->codigo_desconto_1 = $boleto['cod_desc_1'] ? $boleto['cod_desc_1'] : 1; // valor fixo
             $detalhe->segmento_p->data_desconto_1   = $boleto['data_desconto'] ? new \DateTime(
