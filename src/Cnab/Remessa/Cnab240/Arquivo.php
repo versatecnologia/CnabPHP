@@ -331,12 +331,12 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         if ($detalhe->segmento_p->codigo_juros_mora == 3)
         {
             $detalhe->segmento_p->data_juros_mora = str_pad('', 8, '0');
-            $detalhe->segmento_p->valor_juros_mora = str_pad('', 14, '0');
+            $detalhe->segmento_p->valor_juros_mora = str_pad('', 15, '0');
             // Se não há valor logo é isento
         } elseif (!$detalhe->segmento_p->valor_juros_mora)
         {
             $detalhe->segmento_p->data_juros_mora = str_pad('', 8, '0');
-            $detalhe->segmento_p->valor_juros_mora = str_pad('', 14, '0');
+            $detalhe->segmento_p->valor_juros_mora = str_pad('', 15, '0');
             $detalhe->segmento_p->codigo_juros_mora = 3;
         }
 
