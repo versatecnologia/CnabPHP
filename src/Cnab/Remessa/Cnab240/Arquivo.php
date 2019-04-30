@@ -327,6 +327,7 @@ class Arquivo implements \Cnab\Remessa\IArquivo
         $detalhe->segmento_p->codigo_juros_mora = $boleto['codigo_juros_mora']; // 1 = Por dia
         $detalhe->segmento_p->data_juros_mora   = $dateVencimento;
 
+        //validação Caixa
         if ($this->codigo_banco == \Cnab\Banco::CEF)
         {
             // Cód.: 3 = Isento logo não se deve passar tais dados
