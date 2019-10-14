@@ -8,6 +8,7 @@ class Banco
     const BRADESCO  = 237;
     const ITAU      = 341;
     const SICOOB    = 756;
+    const SAFRA     = 422;
 
     public static function getBanco($codigo)
     {
@@ -49,6 +50,12 @@ class Banco
             return array(
                 'codigo_do_banco' => self::SICOOB,
                 'nome_do_banco' => 'BANCO COOPERATIVO DO BRASIL S/A'
+            );
+        }
+        else if($codigo == self::SAFRA) {
+            return array(
+                'codigo_do_banco' => self::SAFRA,
+                'nome_do_banco' => 'Banco Safra S.A'
             );
         }
         else

@@ -44,7 +44,7 @@ class Arquivo implements
             'cep',
         );
 
-        if ($this->codigo_banco == \Cnab\Banco::CEF || $this->codigo_banco == \Cnab\Banco::BRADESCO)
+        if ($this->codigo_banco == \Cnab\Banco::CEF || $this->codigo_banco == \Cnab\Banco::BRADESCO || $this->codigo_banco == \Cnab\Banco::SAFRA)
         {
             $campos[] = 'agencia';
             $campos[] = 'agencia_dv';
@@ -161,7 +161,7 @@ class Arquivo implements
         $this->headerLote->agencia = $this->headerArquivo->agencia;
         $this->headerLote->agencia_dv = $this->headerArquivo->agencia_dv;
 
-        if ($this->codigo_banco != \Cnab\Banco::CEF)
+        if ($this->codigo_banco != \Cnab\Banco::CEF && $this->codigo_banco != \Cnab\Banco::SAFRA)
         {
             $this->headerLote->codigo_convenio = $this->headerArquivo->codigo_convenio;
         }
@@ -203,13 +203,24 @@ class Arquivo implements
         $this->headerLote->nome_empresa = $this->headerArquivo->nome_empresa;
         $this->headerLote->data_geracao = $this->headerArquivo->data_geracao;
 
-        if ($this->codigo_banco == \Cnab\Banco::CEF)
+        if ($this->codigo_banco == \Cnab\Banco::CEF || $this->codigo_banco != \Cnab\Banco::SAFRA)
         {
             $this->headerLote->tipo_servico = 2;
             $this->headerLote->codigo_convenio = $this->configuracao['codigo_convenio'];
             $this->headerArquivo->codigo_cedente = $this->configuracao['codigo_convenio'];
             $this->headerLote->codigo_cedente = $this->configuracao['codigo_convenio'];
             $this->headerLote->uso_exclusivo_febraban_02 = "          ";
+        }
+
+        if ($this->codigo_banco == \Cnab\Banco::SAFRA)
+        {
+            $this->headerArquivo->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
+            $this->headerArquivo->codigo_convenio = str_pad($this->configuracao['codigo_convenio'], 16, 0, STR_PAD_LEFT);
+            $this->headerArquivo->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+
+            $this->headerLote->codigo_convenio = $this->configuracao['codigo_convenio'];
+            $this->headerLote->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+            $this->headerLote->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
         }
 
         $this->trailerLote->codigo_banco = $this->headerArquivo->codigo_banco;
@@ -303,9 +314,19 @@ class Arquivo implements
             $detalhe->segmento_p->digito_nosso_numero = $boleto["nosso_numero_dv_bradesco_240"];
             $detalhe->segmento_p->tipo_documento = 1;
             $detalhe->segmento_p->juros_mora = $boleto['juros_de_um_dia'];
+        } elseif ($this->codigo_banco == \Cnab\Banco::SAFRA)
+        {
+            $detalhe->segmento_p->nosso_numero = (int)$boleto['nosso_numero'];
+            $detalhe->segmento_p->tipo_documento = 1;
+            $detalhe->segmento_p->valor_juros_mora = $boleto['juros_de_um_dia'];
+            $detalhe->segmento_p->codigo_cedente = $this->configuracao['codigo_cedente'];
+            $detalhe->segmento_p->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
+            $detalhe->segmento_p->agencia_dv = $this->configuracao['agencia_dv'];
+            $detalhe->segmento_p->agencia = $this->configuracao['agencia'];
+            $detalhe->segmento_p->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
         } else
         {
-            $nossoNumero = $boleto['nosso_numero'];
+            $nossoNumero = (int)$boleto['nosso_numero'];
 
             if (!$nossoNumero && $boleto['nosso_numero_processado'])
             {
@@ -684,7 +705,7 @@ class Arquivo implements
         // $this->trailerLote->qtde_titulo_cobranca_simples = $qtde_titulo_cobranca_simples;
         // $this->trailerLote->valor_total_titulo_simples = $valor_total_titulo_simples;
 
-        if ($this->codigo_banco != \Cnab\Banco::CEF && $this->codigo_banco != \Cnab\Banco::BANCO_DO_BRASIL && $this->codigo_banco != \Cnab\Banco::BRADESCO)
+        if ($this->codigo_banco != \Cnab\Banco::SAFRA && $this->codigo_banco != \Cnab\Banco::CEF && $this->codigo_banco != \Cnab\Banco::BANCO_DO_BRASIL && $this->codigo_banco != \Cnab\Banco::BRADESCO)
         {
             $this->trailerLote->qtde_titulo_cobranca_vinculada = $qtde_titulo_cobranca_simples;
             $this->trailerLote->valor_total_titulo_vinculada = $valor_total_titulo_simples;
