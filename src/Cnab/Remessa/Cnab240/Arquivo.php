@@ -444,7 +444,13 @@ class Arquivo implements
             in_array($boleto['identificacao_emissao'], array(4, 5))
         )
         {
-            $detalhe->segmento_p->identificacao_emissao = $boleto['identificacao_emissao'];
+            if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL)
+            {
+                $detalhe->segmento_p->identificacao_emissao_bloqueto = $boleto['identificacao_emissao'];
+            } else
+            {
+                $detalhe->segmento_p->identificacao_emissao = $boleto['identificacao_emissao'];
+            }
         }
 
         $detalhe->segmento_p->prazo_protesto = $boleto["prazo_protesto"] ? $boleto["prazo_protesto"] : 0;
