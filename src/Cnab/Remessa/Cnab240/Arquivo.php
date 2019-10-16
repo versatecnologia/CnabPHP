@@ -209,7 +209,14 @@ class Arquivo implements
             $this->headerLote->codigo_convenio = $this->configuracao['codigo_convenio'];
             $this->headerArquivo->codigo_cedente = $this->configuracao['codigo_convenio'];
             $this->headerLote->codigo_cedente = $this->configuracao['codigo_convenio'];
-            $this->headerLote->uso_exclusivo_febraban_02 = "          ";
+
+            if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL)
+            {
+                $this->headerLote->exclusivo_febraban_03 = "          ";
+            } else
+            {
+                $this->headerLote->uso_exclusivo_febraban_02 = "          ";
+            }
         }
 
         if ($this->codigo_banco == \Cnab\Banco::SAFRA)
