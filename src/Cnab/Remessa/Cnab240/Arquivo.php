@@ -137,13 +137,14 @@ class Arquivo implements
         if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL)
         {
             $this->headerArquivo->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
-            $this->headerArquivo->codigo_convenio = $params['codigo_convenio'];
             /**
              * padrão do BB cobranca_cedente = 0014
              */
             $this->headerArquivo->cobranca_cedente = '0014';
             $this->headerArquivo->numero_carteira_cobranca = $params['numero_carteira_cobranca'];
             $this->headerArquivo->variacao_carteira_cobranca = $params['variacao_carteira_cobranca'];
+            $this->headerArquivo->codigo_cedente = $this->configuracao['codigo_cedente'];
+            $this->headerArquivo->codigo_convenio = str_pad($this->configuracao['codigo_convenio'], 9, 0, STR_PAD_LEFT);
         }
 
         $this->headerArquivo->nome_empresa = $this->configuracao['nome_fantasia'];
@@ -203,7 +204,7 @@ class Arquivo implements
         $this->headerLote->nome_empresa = $this->headerArquivo->nome_empresa;
         $this->headerLote->data_geracao = $this->headerArquivo->data_geracao;
 
-        if ($this->codigo_banco == \Cnab\Banco::CEF || $this->codigo_banco != \Cnab\Banco::SAFRA)
+        if ($this->codigo_banco == \Cnab\Banco::CEF || $this->codigo_banco == \Cnab\Banco::SAFRA)
         {
             $this->headerLote->tipo_servico = 2;
             $this->headerLote->codigo_convenio = $this->configuracao['codigo_convenio'];
@@ -269,7 +270,7 @@ class Arquivo implements
             $detalhe->segmento_p->verificador_agencia = $this->configuracao['agencia_dv'];
             $detalhe->segmento_q->codigo_movimento_remessa = $detalhe->segmento_p->codigo_movimento_remessa;
             $detalhe->segmento_r->codigo_movimento_remessa = $detalhe->segmento_p->codigo_movimento_remessa;
-            $detalhe->segmento_p->codigo_cedente = $this->headerArquivo->codigo_cedente;
+            $detalhe->segmento_p->codigo_cedente = $this->configuracao['codigo_cedente'];
         } else
         {
             $detalhe->segmento_p->agencia_dv = $this->headerArquivo->agencia_dv;
@@ -514,7 +515,11 @@ class Arquivo implements
         {
             $detalhe->segmento_q->cep = $prefixoCep;
             $detalhe->segmento_q->sufixo_cep = $sufixoCep;
-            $detalhe->segmento_q->endereco = $this->prepareText($boleto['sacado_logradouro']);
+            $detalhe->segmento_q->endereco = $this->prepareText($boleto['sacado_logradouro'] ? $boleto['sacado_logradouro'] : 's');
+            $detalhe->segmento_q->bairro = $this->prepareText($boleto['sacado_bairro'] ? $boleto['sacado_bairro'] : 'S');
+            $detalhe->segmento_q->cidade = $this->prepareText($boleto['sacado_cidade'] ? $boleto['sacado_cidade'] : 'S');
+            $detalhe->segmento_q->estado = $boleto['sacado_uf'];
+
         } elseif ($this->codigo_banco == \Cnab\Banco::CEF)
         {
             $detalhe->segmento_q->cep = $prefixoCep;
