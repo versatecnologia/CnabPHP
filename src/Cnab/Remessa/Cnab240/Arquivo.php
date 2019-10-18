@@ -167,7 +167,7 @@ class Arquivo implements
             $this->headerLote->codigo_convenio = $this->headerArquivo->codigo_convenio;
         }
 
-        if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL || $this->codigo_banco != \Cnab\Banco::SAFRA)
+        if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL)
         {
             $this->headerLote->codigo_cedente_dv = $this->headerArquivo->codigo_cedente_dv;
             $this->headerLote->codigo_cedente = $this->headerArquivo->codigo_cedente;
