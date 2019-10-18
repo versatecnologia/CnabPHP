@@ -231,13 +231,11 @@ class Arquivo implements
             */
             $this->headerArquivo->tipo_registro = 2;
             $this->headerArquivo->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
-            $this->headerArquivo->codigo_convenio = str_pad('', 20, 0, STR_PAD_LEFT);
             $this->headerArquivo->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
             $this->headerArquivo->codigo_cedente =  $this->headerArquivo->codigo_cedente;
 
             $this->headerLote->tipo_operacao = 'C';
             $this->headerLote->versao_layout_lote = 040;
-            $this->headerLote->codigo_convenio = $this->headerArquivo->codigo_convenio;
             $this->headerLote->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
             $this->headerLote->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
             $this->headerLote->tipo_servico = 2;
