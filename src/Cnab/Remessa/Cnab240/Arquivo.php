@@ -44,7 +44,7 @@ class Arquivo implements
             'cep',
         );
 
-        if ($this->codigo_banco == \Cnab\Banco::CEF || $this->codigo_banco == \Cnab\Banco::BRADESCO || $this->codigo_banco == \Cnab\Banco::SAFRA)
+        if ($this->codigo_banco == \Cnab\Banco::CEF || $this->codigo_banco == \Cnab\Banco::BRADESCO)
         {
             $campos[] = 'agencia';
             $campos[] = 'agencia_dv';
@@ -55,7 +55,7 @@ class Arquivo implements
             $campos[] = 'numero_sequencial_arquivo';
         }
 
-        if ($this->codigo_banco == \Cnab\Banco::SICOOB)
+        if ($this->codigo_banco == \Cnab\Banco::SICOOB || $this->codigo_banco == \Cnab\Banco::SAFRA)
         {
             $campos[] = 'agencia';
             $campos[] = 'agencia_dv';
@@ -204,7 +204,7 @@ class Arquivo implements
         $this->headerLote->nome_empresa = $this->headerArquivo->nome_empresa;
         $this->headerLote->data_geracao = $this->headerArquivo->data_geracao;
 
-        if ($this->codigo_banco == \Cnab\Banco::CEF)
+        if ($this->codigo_banco == \Cnab\Banco::CEF )
         {
             $this->headerLote->tipo_servico = 2;
             $this->headerLote->codigo_convenio = $this->configuracao['codigo_convenio'];
@@ -222,13 +222,24 @@ class Arquivo implements
 
         if ($this->codigo_banco == \Cnab\Banco::SAFRA)
         {
+            /*
+            '0' = Isento / Não Informado
+            '1' = CPF
+            '2' = CGC / CNPJ
+            '3' = PIS / PASEP
+            '9' = Outros
+            */
+            $this->headerArquivo->tipo_registro = 2;
             $this->headerArquivo->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
-            $this->headerArquivo->codigo_convenio = str_pad($this->configuracao['codigo_convenio'], 16, 0, STR_PAD_LEFT);
             $this->headerArquivo->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+            $this->headerArquivo->codigo_cedente =  $this->headerArquivo->codigo_cedente;
 
-            $this->headerLote->codigo_convenio = $this->configuracao['codigo_convenio'];
+            $this->headerLote->tipo_operacao = 'C';
+            $this->headerLote->versao_layout_lote = 040;
             $this->headerLote->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
             $this->headerLote->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
+            $this->headerLote->tipo_servico = 2;
+            $this->headerLote->codigo_cedente = $this->headerArquivo->codigo_cedente;
         }
 
         $this->trailerLote->codigo_banco = $this->headerArquivo->codigo_banco;
