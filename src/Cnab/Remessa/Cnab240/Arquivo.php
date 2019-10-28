@@ -204,7 +204,7 @@ class Arquivo implements
         $this->headerLote->nome_empresa = $this->headerArquivo->nome_empresa;
         $this->headerLote->data_geracao = $this->headerArquivo->data_geracao;
 
-        if ($this->codigo_banco == \Cnab\Banco::CEF || $this->codigo_banco == \Cnab\Banco::SAFRA)
+        if ($this->codigo_banco == \Cnab\Banco::CEF)
         {
             $this->headerLote->tipo_servico = 2;
             $this->headerLote->codigo_convenio = $this->configuracao['codigo_convenio'];
