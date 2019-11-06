@@ -55,7 +55,7 @@ class Banco
         else if($codigo == self::SAFRA) {
             return array(
                 'codigo_do_banco' => self::SAFRA,
-                'nome_do_banco' => 'Banco Safra S.A'
+                'nome_do_banco' => 'BANCO SAFRA S/A'
             );
         }
         else

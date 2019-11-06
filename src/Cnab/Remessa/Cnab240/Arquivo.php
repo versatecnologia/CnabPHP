@@ -158,7 +158,7 @@ class Arquivo implements
         $this->headerLote->lote_servico = 1;
         $this->headerLote->tipo_operacao = 'R';
         $this->headerLote->codigo_inscricao = $this->headerArquivo->codigo_inscricao;
-        $this->headerLote->numero_inscricao = $this->headerArquivo->numero_inscricao;
+        $this->headerLote->numero_inscricao =  $this->prepareText($this->configuracao['cpf_cnpj'], '.-/');;
         $this->headerLote->agencia = $this->headerArquivo->agencia;
         $this->headerLote->agencia_dv = $this->headerArquivo->agencia_dv;
 
@@ -220,6 +220,12 @@ class Arquivo implements
             }
         }
 
+        $this->headerArquivo->codigo_banco = $this->codigo_banco;
+        $this->trailerLote->codigo_banco = $this->headerArquivo->codigo_banco;
+        $this->trailerLote->lote_servico = $this->headerLote->lote_servico;
+
+        $this->trailerArquivo->codigo_banco = $this->headerArquivo->codigo_banco;
+
         if ($this->codigo_banco == \Cnab\Banco::SAFRA)
         {
             /*
@@ -229,23 +235,26 @@ class Arquivo implements
             '3' = PIS / PASEP
             '9' = Outros
             */
-            $this->headerArquivo->tipo_registro = 2;
             $this->headerArquivo->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
             $this->headerArquivo->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
             $this->headerArquivo->codigo_cedente =  $this->headerArquivo->codigo_cedente;
+            $this->headerArquivo->lote_servico = '0000';
+            $this->headerArquivo->tipo_registro = '0';
+            $this->headerArquivo->codigo_inscricao = 2;
+            $this->headerArquivo->numero_inscricao =  $this->prepareText($this->configuracao['cpf_cnpj'], '.-/');;
+            $this->headerArquivo->hora_geracao = '000000';
+            $this->headerArquivo->nome_empresa = $this->configuracao['razao_social'];;
 
-            $this->headerLote->tipo_operacao = 'C';
-            $this->headerLote->versao_layout_lote = 040;
-            $this->headerLote->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+            $this->headerLote->nome_empresa = $this->headerArquivo->nome_empresa;
+            $this->headerLote->tipo_operacao = 'R';
+            $this->headerLote->versao_layout_lote = '060';
+            $this->headerLote->agencia_mais_cedente_dv = 0;
             $this->headerLote->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
-            $this->headerLote->tipo_servico = 2;
+            $this->headerLote->tipo_servico = '01';
             $this->headerLote->codigo_cedente = $this->headerArquivo->codigo_cedente;
+            $this->trailerLote->lote_servico = $this->headerLote->lote_servico;
+            $this->trailerLote->uso_exclusivo_febraban_02 = $params['qtde_contas_conciliacao'];
         }
-
-        $this->trailerLote->codigo_banco = $this->headerArquivo->codigo_banco;
-        $this->trailerLote->lote_servico = $this->headerLote->lote_servico;
-
-        $this->trailerArquivo->codigo_banco = $this->headerArquivo->codigo_banco;
 
         if ($this->trailerArquivo->existField('qtde_contas_conciliacao'))
         {
@@ -342,7 +351,10 @@ class Arquivo implements
             $detalhe->segmento_p->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
             $detalhe->segmento_p->agencia_dv = $this->configuracao['agencia_dv'];
             $detalhe->segmento_p->agencia = $this->configuracao['agencia'];
-            $detalhe->segmento_p->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+            $detalhe->segmento_p->agencia_mais_cedente_dv = $this->configuracao['agencia_dv'];
+            $detalhe->segmento_p->nosso_numero = (int)$boleto['nosso_numero'];
+            $detalhe->segmento_p->codigo_carteira = 2;
+
         } else
         {
             $nossoNumero = (int)$boleto['nosso_numero'];
