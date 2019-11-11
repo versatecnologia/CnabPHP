@@ -236,7 +236,7 @@ class Arquivo implements
             '9' = Outros
             */
             $this->headerArquivo->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
-            $this->headerArquivo->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+            $this->headerArquivo->agencia_mais_cedente_dv = $this->configuracao['agencia_dv'];
             $this->headerArquivo->codigo_cedente =  $this->headerArquivo->codigo_cedente;
             $this->headerArquivo->lote_servico = '0000';
             $this->headerArquivo->tipo_registro = '0';
@@ -248,7 +248,7 @@ class Arquivo implements
             $this->headerLote->nome_empresa = $this->headerArquivo->nome_empresa;
             $this->headerLote->tipo_operacao = 'R';
             $this->headerLote->versao_layout_lote = '060';
-            $this->headerLote->agencia_mais_cedente_dv = 0;
+            $this->headerLote->agencia_mais_cedente_dv = $this->headerArquivo->agencia_mais_cedente_dv;
             $this->headerLote->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
             $this->headerLote->tipo_servico = '01';
             $this->headerLote->codigo_cedente = $this->headerArquivo->codigo_cedente;
@@ -344,7 +344,7 @@ class Arquivo implements
             $detalhe->segmento_p->juros_mora = $boleto['juros_de_um_dia'];
         } elseif ($this->codigo_banco == \Cnab\Banco::SAFRA)
         {
-            $detalhe->segmento_p->nosso_numero = (int)$boleto['nosso_numero'];
+            $detalhe->segmento_p->nosso_numero = $boleto['nosso_numero'];
             $detalhe->segmento_p->tipo_documento = 1;
             $detalhe->segmento_p->valor_juros_mora = $boleto['juros_de_um_dia'];
             $detalhe->segmento_p->codigo_cedente = $this->configuracao['codigo_cedente'];
@@ -352,7 +352,6 @@ class Arquivo implements
             $detalhe->segmento_p->agencia_dv = $this->configuracao['agencia_dv'];
             $detalhe->segmento_p->agencia = $this->configuracao['agencia'];
             $detalhe->segmento_p->agencia_mais_cedente_dv = $this->configuracao['agencia_dv'];
-            $detalhe->segmento_p->nosso_numero = (int)$boleto['nosso_numero'];
             $detalhe->segmento_p->codigo_carteira = 2;
 
         } else
