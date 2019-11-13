@@ -344,7 +344,7 @@ class Arquivo implements
             $detalhe->segmento_p->juros_mora = $boleto['juros_de_um_dia'];
         } elseif ($this->codigo_banco == \Cnab\Banco::SAFRA)
         {
-            $detalhe->segmento_p->nosso_numero = $boleto['nosso_numero'];
+            $detalhe->segmento_p->nosso_numero = str_pad($boleto['nosso_numero'], 9, '0', STR_PAD_LEFT);
             $detalhe->segmento_p->tipo_documento = 1;
             $detalhe->segmento_p->valor_juros_mora = $boleto['juros_de_um_dia'];
             $detalhe->segmento_p->codigo_cedente = $this->configuracao['codigo_cedente'];
@@ -353,6 +353,7 @@ class Arquivo implements
             $detalhe->segmento_p->agencia = $this->configuracao['agencia'];
             $detalhe->segmento_p->agencia_mais_cedente_dv = $this->configuracao['agencia_dv'];
             $detalhe->segmento_p->codigo_carteira = 2;
+            $detalhe->segmento_p->uso_exclusivo_banco_04 = '           ';
 
         } else
         {
@@ -581,13 +582,20 @@ class Arquivo implements
             $detalhe->segmento_r->codigo_ocorrencia = $detalhe->segmento_p->codigo_ocorrencia;
         }
 
-        if ($boleto['valor_multa'] > 0)
-        {
-            $detalhe->segmento_r->codigo_multa = 1;
-            $detalhe->segmento_r->valor_multa = $boleto['valor_multa'];
-            $detalhe->segmento_r->data_multa = $boleto['data_multa'] ? new \DateTime(
-                $boleto['data_multa']
-            ) : 0;
+        if (($boleto['valor_multa'] * 1) > 0){
+            //Pelo retorno da homologação parece que o banco safra só trabalha com percentual
+            if($this->codigo_banco == \Cnab\Banco::SAFRA){
+                $detalhe->segmento_r->codigo_multa = 2;
+                $detalhe->segmento_r->data_multa = $boleto['data_multa'] ? new \DateTime($boleto['data_multa']) : 0;
+                $percentual = number_format((($boleto['valor_multa'] * 100) / $detalhe->segmento_p->valor_titulo), 2, '.', '');
+                $detalhe->segmento_r->valor_multa = $percentual;
+            }else{
+                $detalhe->segmento_r->codigo_multa = 1;
+                $detalhe->segmento_r->valor_multa = $boleto['valor_multa'];
+                $detalhe->segmento_r->data_multa = $boleto['data_multa'] ? new \DateTime(
+                    $boleto['data_multa']
+                ) : 0;
+            }
         } else
         {
             $detalhe->segmento_r->codigo_multa = 0;
