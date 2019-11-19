@@ -598,6 +598,11 @@ class Arquivo implements
             }
         } else
         {
+            if ($this->codigo_banco == \Cnab\Banco::SAFRA)
+            {
+                $detalhe->segmento_p->codigo_juros_mora = 3;
+            }
+
             $detalhe->segmento_r->codigo_multa = 0;
             $detalhe->segmento_r->valor_multa = 0;
             $detalhe->segmento_r->data_multa = 0;
