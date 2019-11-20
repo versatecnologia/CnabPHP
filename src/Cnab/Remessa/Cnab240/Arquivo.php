@@ -408,8 +408,9 @@ class Arquivo implements
         if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL)
         {
             $detalhe->segmento_p->juros_mora_dia = $boleto['juros_de_um_dia'];
-        } elseif ($this->codigo_banco != \Cnab\Banco::BRADESCO && $this->codigo_banco != \Cnab\Banco::SAFRA)
+        } elseif ($this->codigo_banco != \Cnab\Banco::BRADESCO)
         {
+            $detalhe->segmento_p->uso_empresa = $boleto['numero_documento'];
             $detalhe->segmento_p->valor_juros_mora = $boleto['juros_de_um_dia'];
         }
 
