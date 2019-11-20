@@ -348,7 +348,7 @@ class Arquivo implements
             $detalhe->segmento_p->tipo_documento = 1;
             $detalhe->segmento_p->valor_juros_mora = $boleto['juros_de_um_dia'];
 
-            $detalhe->segmento_p->codigo_juros_mora = ($boleto['juros_de_um_dia'] && $boleto['juros_de_um_dia'] > 0 ? 1 : 3);
+            $detalhe->segmento_p->codigo_juros_mora = (($boleto['juros_de_um_dia'] && $boleto['juros_de_um_dia'] > 0) ? 1 : 3);
 
             $detalhe->segmento_p->codigo_cedente = $this->configuracao['codigo_cedente'];
             $detalhe->segmento_p->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
@@ -407,7 +407,7 @@ class Arquivo implements
         if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL)
         {
             $detalhe->segmento_p->juros_mora_dia = $boleto['juros_de_um_dia'];
-        } elseif ($this->codigo_banco != \Cnab\Banco::BRADESCO)
+        } elseif ($this->codigo_banco != \Cnab\Banco::BRADESCO && $this->codigo_banco != \Cnab\Banco::SAFRA)
         {
             $detalhe->segmento_p->uso_empresa = $boleto['numero_documento'];
             $detalhe->segmento_p->valor_juros_mora = $boleto['juros_de_um_dia'];
@@ -417,7 +417,8 @@ class Arquivo implements
         $detalhe->segmento_p->especie = $boleto['especie']; // 4 = Duplicata serviço
         $detalhe->segmento_p->aceite = $boleto['aceite'];
         $detalhe->segmento_p->data_emissao = $dateCadastro;
-        $detalhe->segmento_p->codigo_juros_mora = $boleto['codigo_juros_mora']; // 1 = Por dia
+        $detalhe->segmento_p->codigo_juros_mora =
+            (!$detalhe->segmento_p->valor_juros_mora && $this->codigo_banco == \Cnab\Banco::SAFRA) ? 3 : $boleto['codigo_juros_mora']; // 1 = Por dia
         $detalhe->segmento_p->data_juros_mora = $dateVencimento;
 
         //validação Caixa
