@@ -347,6 +347,7 @@ class Arquivo implements
             $detalhe->segmento_p->nosso_numero = str_pad($boleto['nosso_numero'], 9, '0', STR_PAD_LEFT);
             $detalhe->segmento_p->tipo_documento = 1;
             $detalhe->segmento_p->valor_juros_mora = $boleto['juros_de_um_dia'];
+            $detalhe->segmento_p->uso_empresa = $boleto['numero_documento'];
 
             $detalhe->segmento_p->codigo_juros_mora = (($boleto['juros_de_um_dia'] && $boleto['juros_de_um_dia'] > 0) ? 1 : 3);
 
@@ -409,7 +410,6 @@ class Arquivo implements
             $detalhe->segmento_p->juros_mora_dia = $boleto['juros_de_um_dia'];
         } elseif ($this->codigo_banco != \Cnab\Banco::BRADESCO && $this->codigo_banco != \Cnab\Banco::SAFRA)
         {
-            $detalhe->segmento_p->uso_empresa = $boleto['numero_documento'];
             $detalhe->segmento_p->valor_juros_mora = $boleto['juros_de_um_dia'];
         }
 
