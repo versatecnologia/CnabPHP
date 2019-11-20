@@ -417,8 +417,7 @@ class Arquivo implements
         $detalhe->segmento_p->especie = $boleto['especie']; // 4 = Duplicata serviço
         $detalhe->segmento_p->aceite = $boleto['aceite'];
         $detalhe->segmento_p->data_emissao = $dateCadastro;
-        $detalhe->segmento_p->codigo_juros_mora =
-            (!$detalhe->segmento_p->valor_juros_mora && $this->codigo_banco == \Cnab\Banco::SAFRA) ? 3 : $boleto['codigo_juros_mora']; // 1 = Por dia
+        $detalhe->segmento_p->codigo_juros_mora = ($detalhe->segmento_p->valor_juros_mora && $detalhe->segmento_p->valor_juros_mora > 0) ? 1 : 3;
         $detalhe->segmento_p->data_juros_mora = $dateVencimento;
 
         //validação Caixa
