@@ -347,6 +347,9 @@ class Arquivo implements
             $detalhe->segmento_p->nosso_numero = str_pad($boleto['nosso_numero'], 9, '0', STR_PAD_LEFT);
             $detalhe->segmento_p->tipo_documento = 1;
             $detalhe->segmento_p->valor_juros_mora = $boleto['juros_de_um_dia'];
+
+            $detalhe->segmento_p->codigo_juros_mora = ($boleto['juros_de_um_dia'] && $boleto['juros_de_um_dia'] > 0 ? 1 : 3);
+
             $detalhe->segmento_p->codigo_cedente = $this->configuracao['codigo_cedente'];
             $detalhe->segmento_p->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
             $detalhe->segmento_p->agencia_dv = $this->configuracao['agencia_dv'];
@@ -598,11 +601,6 @@ class Arquivo implements
             }
         } else
         {
-            if ($this->codigo_banco == \Cnab\Banco::SAFRA)
-            {
-                $detalhe->segmento_p->codigo_juros_mora = 3;
-            }
-
             $detalhe->segmento_r->codigo_multa = 0;
             $detalhe->segmento_r->valor_multa = 0;
             $detalhe->segmento_r->data_multa = 0;
