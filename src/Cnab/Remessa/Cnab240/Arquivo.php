@@ -412,7 +412,6 @@ class Arquivo implements
         {
             $detalhe->segmento_p->uso_empresa = $boleto['numero_documento'];
             $detalhe->segmento_p->valor_juros_mora = $boleto['juros_de_um_dia'];
-            $detalhe->segmento_p->codigo_juros_mora = ($detalhe->segmento_p->valor_juros_mora && $detalhe->segmento_p->valor_juros_mora > 0) ? 1 : 3;
         }
 
         $detalhe->segmento_p->numero_documento = $boleto['numero_documento'];
@@ -420,6 +419,12 @@ class Arquivo implements
         $detalhe->segmento_p->aceite = $boleto['aceite'];
         $detalhe->segmento_p->data_emissao = $dateCadastro;
         $detalhe->segmento_p->data_juros_mora = $dateVencimento;
+
+        if ($detalhe->segmento_p->existField('codigo_juros_mora'))
+        {
+            $detalhe->segmento_p->codigo_juros_mora =
+                ($detalhe->segmento_p->existField('valor_juros_mora') && $detalhe->segmento_p->valor_juros_mora > 0) ? 1 : 3;
+        }
 
         //validação Caixa
         if ($this->codigo_banco == \Cnab\Banco::CEF)
