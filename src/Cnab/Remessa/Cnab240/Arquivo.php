@@ -422,8 +422,10 @@ class Arquivo implements
 
         if ($detalhe->segmento_p->existField('codigo_juros_mora'))
         {
+
             $detalhe->segmento_p->codigo_juros_mora =
-                ($detalhe->segmento_p->existField('valor_juros_mora') && $detalhe->segmento_p->valor_juros_mora > 0) ? 1 : 3;
+                ($detalhe->segmento_p->existField('valor_juros_mora') && $detalhe->segmento_p->valor_juros_mora > 0) ? 1 :
+                    ($detalhe->segmento_p->existField('juros_mora_dia') && $detalhe->segmento_p->juros_mora_dia > 0) ? 1 : 3;
         }
 
         //validação Caixa
