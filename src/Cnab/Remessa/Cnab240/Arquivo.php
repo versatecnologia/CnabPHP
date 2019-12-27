@@ -55,6 +55,10 @@ class Arquivo implements
             $campos[] = 'numero_sequencial_arquivo';
         }
 
+        if ($this->codigo_banco == \Cnab\Banco::SICOOB){
+            $campos[] = 'qtde_contas_conciliacao';
+        }
+
         if ($this->codigo_banco == \Cnab\Banco::SICOOB || $this->codigo_banco == \Cnab\Banco::SAFRA)
         {
             $campos[] = 'agencia';
@@ -256,7 +260,7 @@ class Arquivo implements
             $this->trailerLote->uso_exclusivo_febraban_02 = $params['qtde_contas_conciliacao'];
         }
 
-        if ($this->trailerArquivo->existField('qtde_contas_conciliacao'))
+        if ($this->trailerArquivo->existField('qtde_contas_conciliacao') && isset($this->configuracao['qtde_contas_conciliacao']))
         {
             $this->trailerArquivo->qtde_contas_conciliacao = $this->configuracao['qtde_contas_conciliacao'];
         }
@@ -302,7 +306,10 @@ class Arquivo implements
             $detalhe->segmento_p->codigo_cedente = $this->configuracao['codigo_cedente'];
             $detalhe->segmento_p->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
             $detalhe->segmento_p->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
-            $detalhe->segmento_p->verificador_agencia_cobradora = $this->configuracao['agencia_dv'];
+
+            if ($detalhe->segmento_p->existField('verificador_agencia_cobradora')) {
+                $detalhe->segmento_p->verificador_agencia_cobradora = $this->configuracao['agencia_dv'];
+            }
         }
 
         if ($this->codigo_banco == \Cnab\Banco::BRADESCO)
