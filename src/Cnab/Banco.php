@@ -49,7 +49,7 @@ class Banco
         else if($codigo == self::SICOOB) {
             return array(
                 'codigo_do_banco' => self::SICOOB,
-                'nome_do_banco' => 'BANCO COOPERATIVO DO BRASIL S/A'
+                'nome_do_banco' => 'SICOOB'
             );
         }
         else if($codigo == self::SAFRA) {

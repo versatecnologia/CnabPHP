@@ -66,6 +66,7 @@ class Arquivo implements
             $campos[] = 'codigo_cedente';
             $campos[] = 'codigo_cedente_dv';
             $campos[] = 'agencia_mais_cedente_dv';
+            $campos[] = 'agencia_mais_cedente_dv_header';
             $campos[] = 'numero_sequencial_arquivo';
         }
 
@@ -127,7 +128,7 @@ class Arquivo implements
         if ($this->codigo_banco == \Cnab\Banco::SICOOB)
         {
             $this->headerArquivo->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
-            $this->headerArquivo->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv'];
+            $this->headerArquivo->agencia_mais_cedente_dv = $this->configuracao['agencia_mais_cedente_dv_header'];
         }
 
         if ($this->codigo_banco == \Cnab\Banco::BRADESCO)
@@ -366,6 +367,21 @@ class Arquivo implements
             $detalhe->segmento_p->codigo_carteira = 2;
             $detalhe->segmento_p->uso_exclusivo_banco_04 = '           ';
 
+        } elseif ($this->codigo_banco == \Cnab\Banco::SICOOB)
+        {
+            $nossoNumero = $boleto['nosso_numero'];
+
+            if (!$nossoNumero && $boleto['nosso_numero_processado'])
+            {
+                $nossoNumero = $boleto['nosso_numero_processado'];
+            }
+
+            if (!$nossoNumero && $this->configuracao['nosso_numero_processado'])
+            {
+                $nossoNumero = $this->configuracao['nosso_numero_processado'];
+            }
+
+            $detalhe->segmento_p->nosso_numero = $nossoNumero;
         } else
         {
             $nossoNumero = (int)$boleto['nosso_numero'];
@@ -429,10 +445,21 @@ class Arquivo implements
 
         if ($detalhe->segmento_p->existField('codigo_juros_mora'))
         {
+            if ($this->codigo_banco == \Cnab\Banco::SICOOB) {
+                $detalhe->segmento_p->codigo_juros_mora =
+                    ($detalhe->segmento_p->existField('valor_juros_mora') && $detalhe->segmento_p->valor_juros_mora > 0) ? 1 :
+                        ($detalhe->segmento_p->existField('juros_mora_dia') && $detalhe->segmento_p->juros_mora_dia > 0) ? 1 : 0;
 
-            $detalhe->segmento_p->codigo_juros_mora =
-                ($detalhe->segmento_p->existField('valor_juros_mora') && $detalhe->segmento_p->valor_juros_mora > 0) ? 1 :
-                    ($detalhe->segmento_p->existField('juros_mora_dia') && $detalhe->segmento_p->juros_mora_dia > 0) ? 1 : 3;
+                //Se for isento não deve informar a data
+                if ($detalhe->segmento_p->codigo_juros_mora == 0) {
+                    $detalhe->segmento_p->data_juros_mora = '00000000';
+                }
+            }
+            else {
+                $detalhe->segmento_p->codigo_juros_mora =
+                    ($detalhe->segmento_p->existField('valor_juros_mora') && $detalhe->segmento_p->valor_juros_mora > 0) ? 1 :
+                        ($detalhe->segmento_p->existField('juros_mora_dia') && $detalhe->segmento_p->juros_mora_dia > 0) ? 1 : 3;
+            }
         }
 
         //validação Caixa
@@ -475,9 +502,19 @@ class Arquivo implements
             $detalhe->segmento_p->codigo_baixa = 1; // Baixar
             $detalhe->segmento_p->codigo_ocorrencia = $boleto['codigo_ocorrencia'];
 
+            if ($this->codigo_banco == \Cnab\Banco::SICOOB) {
+                $detalhe->segmento_p->codigo_baixa = 0;
+                $detalhe->segmento_p->agencia_cobradora_dv = '';
+            }
+
             if ($detalhe->segmento_p->existField("prazo_baixa"))
             {
-                $detalhe->segmento_p->prazo_baixa = $boleto['prazo'];
+                if ($this->codigo_banco == \Cnab\Banco::SICOOB) {
+                    $detalhe->segmento_p->prazo_baixa = '   ';
+                }
+                else {
+                    $detalhe->segmento_p->prazo_baixa = $boleto['prazo'];
+                }
             }
         }
 
