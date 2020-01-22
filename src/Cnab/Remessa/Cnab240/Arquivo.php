@@ -541,6 +541,11 @@ class Arquivo implements
             $detalhe->segmento_p->prazo_protesto = $boleto['prazo_protesto'];
         }
 
+        //Se o codigo de movimento for 31 deve retornar 9 no codigo de prostesto documentação sicoob
+        if ($this->codigo_banco == \Cnab\Banco::SICOOB && $detalhe->segmento_p->codigo_movimento_remessa == 31) {
+            $detalhe->segmento_p->codigo_protesto = 9;
+        }
+
         // SEGMENTO Q -------------------------------
         $detalhe->segmento_q->codigo_banco = $this->headerArquivo->codigo_banco;
         $detalhe->segmento_q->lote_servico = $this->headerLote->lote_servico;
@@ -608,6 +613,20 @@ class Arquivo implements
             $detalhe->segmento_q->cep = $cep;
             $detalhe->segmento_q->logradouro = $this->prepareText($boleto['sacado_logradouro']);
         }
+
+        if ($this->codigo_banco != \Cnab\Banco::SICOOB && $detalhe->segmento_q->cep = $cep) {
+            // N/I = Não informado
+            if (!$detalhe->segmento_q->bairro) {
+                $detalhe->segmento_q->bairro = "N/I";
+            }
+            if (!$detalhe->segmento_q->cidade) {
+                $detalhe->segmento_q->cidade = "N/I";
+            }
+            if (!$detalhe->segmento_q->estado) {
+                $detalhe->segmento_q->estado = "N/I";
+            }
+        }
+
 
         // se o titulo for de terceiro, o sacador é o terceiro
         if ($boleto['terceiro'])
