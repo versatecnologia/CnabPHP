@@ -609,7 +609,7 @@ class Arquivo implements
             $detalhe->segmento_q->logradouro = $this->prepareText($boleto['sacado_logradouro']);
         }
 
-        if ($this->codigo_banco != \Cnab\Banco::SICOOB && $detalhe->segmento_q->cep = $cep) {
+        if ($this->codigo_banco == \Cnab\Banco::SICOOB && $detalhe->segmento_q->cep) {
             // N/I = Não informado
             if (!$detalhe->segmento_q->bairro) {
                 $detalhe->segmento_q->bairro = "N/I";
