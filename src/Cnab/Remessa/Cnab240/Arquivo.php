@@ -542,10 +542,10 @@ class Arquivo implements
         }
 
         //Se o codigo de movimento for 31 deve retornar 9 no codigo de prostesto documentação sicoob
-        if ($this->codigo_banco == \Cnab\Banco::SICOOB && $detalhe->segmento_p->codigo_movimento_remessa == 31) {
+        if ($this->codigo_banco == \Cnab\Banco::SICOOB && $detalhe->segmento_p->codigo_ocorrencia == 31) {
             $detalhe->segmento_p->codigo_protesto = 9;
         }
-        
+
         // SEGMENTO Q -------------------------------
         $detalhe->segmento_q->codigo_banco = $this->headerArquivo->codigo_banco;
         $detalhe->segmento_q->lote_servico = $this->headerLote->lote_servico;
