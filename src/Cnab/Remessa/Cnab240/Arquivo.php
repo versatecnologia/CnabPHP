@@ -564,6 +564,7 @@ class Arquivo implements
             {
                 $detalhe->segmento_q->nome_sacador_avalista = $this->prepareText($boleto['sacado_nome']);
                 $detalhe->segmento_q->numero_inscricao = $this->prepareText($boleto['sacado_cnpj'], '.-/');
+                $detalhe->segmento_q->sacador_nome = $this->prepareText($boleto['sacado_nome']);
             } else
             {
                 $detalhe->segmento_q->sacado_codigo_inscricao = '2';
