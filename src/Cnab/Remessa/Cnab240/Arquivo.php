@@ -335,7 +335,7 @@ class Arquivo implements
 
         if ($this->codigo_banco == \Cnab\Banco::CEF)
         {
-            $detalhe->segmento_p->codigo_cedente = $this->configuracao['codigo_convenio'];
+            $detalhe->segmento_p->codigo_cedente = (\str_pad($this->configuracao['codigo_convenio'], 12, '0', STR_PAD_LEFT));
             $detalhe->segmento_p->uso_exclusivo_caixa_02 = '000';
             $detalhe->segmento_p->modalidade_carteira_sigcb = (
             $boleto['modalidade_carteira'] ? $boleto['modalidade_carteira'] : $boleto['carteira']
