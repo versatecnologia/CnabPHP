@@ -213,8 +213,8 @@ class Arquivo implements
         {
             $this->headerLote->tipo_servico = 2;
             $this->headerLote->codigo_convenio = $this->configuracao['codigo_convenio'];
-            $this->headerArquivo->codigo_cedente = $this->configuracao['codigo_convenio'];
-            $this->headerLote->codigo_cedente = $this->configuracao['codigo_convenio'];
+            $this->headerArquivo->codigo_cedente =str_pad($this->configuracao['codigo_convenio'], 12, 0, STR_PAD_LEFT);
+            $this->headerLote->codigo_cedente = str_pad($this->configuracao['codigo_convenio'], 12, 0, STR_PAD_LEFT);
 
             if ($this->codigo_banco == \Cnab\Banco::BANCO_DO_BRASIL)
             {
@@ -337,6 +337,7 @@ class Arquivo implements
         {
             $detalhe->segmento_p->codigo_cedente = (\str_pad($this->configuracao['codigo_convenio'], 12, '0', STR_PAD_LEFT));
             $detalhe->segmento_p->uso_exclusivo_caixa_02 = '000';
+            $detalhe->segmento_p->codigo_cedente_dv = $this->configuracao['codigo_cedente_dv'];
             $detalhe->segmento_p->modalidade_carteira_sigcb = (
             $boleto['modalidade_carteira'] ? $boleto['modalidade_carteira'] : $boleto['carteira']
             );
