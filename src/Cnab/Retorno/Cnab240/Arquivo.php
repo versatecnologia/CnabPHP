@@ -152,4 +152,28 @@ class Arquivo implements \Cnab\Retorno\IArquivo
     public function getCodigoConvenio() {
         return $this->header->getCodigoConvenio();
     }
+
+    /**
+     * Retorno o número da agência da empresa presente no cabeçalho do arquivo de retorno
+     * @return |null
+     */
+    public function getAgencia() {
+        return $this->header->getAgencia();
+    }
+
+    /**
+     * Retorno o número da conta da empresa presente no cabeçalho do arquivo de retorno
+     * @return |null
+     */
+    public function getCodigoCedente() {
+        return $this->header->getCodigoCedente();
+    }
+
+    /**
+     * Retorno o dígito verificador da conta da empresa presente no cabeçalho do arquivo de retorno
+     * @return |null
+     */
+    public function getCodigoCedenteDv() {
+        return $this->header->getCodigoCedenteDv();
+    }
 }
