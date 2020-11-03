@@ -50,7 +50,7 @@ class Factory
 	 * @param  string $filename
 	 * @return \Cnab\Remessa\IArquivo
 	 */
-	public function createRetorno($filename)
+    public function createRetorno($filename, $resumido = false)
     {
         $identifier = new Format\Identifier;
 
@@ -79,7 +79,7 @@ class Factory
         }
         else if($format['bytes'] == 240)
         {
-    		return new Retorno\Cnab240\Arquivo($format['banco'], $filename, $format['layout_versao']);
+    		return new Retorno\Cnab240\Arquivo($format['banco'], $filename, $format['layout_versao'],$resumido);
         }
         else
             throw new \Exception('Formato não suportado');

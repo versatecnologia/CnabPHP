@@ -15,7 +15,7 @@ class Arquivo implements \Cnab\Retorno\IArquivo
 
 	private $filename;
 
-	public function __construct($codigo_banco, $filename, $layoutVersao=null)
+    public function __construct($codigo_banco, $filename, $layoutVersao = null, $resumido = false)
 	{
 		$this->filename = $filename;
         $this->layoutVersao = $layoutVersao;
@@ -44,6 +44,10 @@ class Arquivo implements \Cnab\Retorno\IArquivo
             {
                 // header
                 $this->header->loadFromString($linha);
+
+                if($resumido) {
+                    return true;
+                }
 			}
 			else if($tipo_registro == '1')
             {
